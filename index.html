@@ -381,6 +381,35 @@
   .entry-main { font-weight: 600; color: var(--texte); }
   .entry-note { font-size: 0.78rem; color: var(--texte-doux); margin-top: 2px; }
 
+  .result-main-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--sable-dark);
+  }
+  .btn-copy {
+    background: var(--sable-dark);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: #d5d0c7; }
+  .lien-farevanaa {
+    font-size: 0.78rem;
+    color: var(--lagon);
+    text-decoration: none;
+    font-weight: 600;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .lien-farevanaa:hover { opacity: 1; text-decoration: underline; }
   .result-code {
     background: #1a1a2e;
     color: #a8ff78;
@@ -444,10 +473,10 @@
 </header>
 
 <div class="tabs">
-  <button class="tab active" onclick="showTab('traduire')">🌺 Traduire</button>
-  <button class="tab" onclick="showTab('lexique')">📖 Lexique</button>
-  <button class="tab" onclick="showTab('historique')">🕐 Historique</button>
-  <button class="tab" onclick="showTab('expert')">⚙️ Expert</button>
+  <button class="tab active" id="tab-traduire" onclick="showTab('traduire')">🌺 Traduire</button>
+  <button class="tab" id="tab-lexique" onclick="showTab('lexique')">📖 Lexique</button>
+  <button class="tab" id="tab-historique" onclick="showTab('historique')">🕐 Historique</button>
+  <button class="tab" id="tab-expert" onclick="showTab('expert')">⚙️ Expert</button>
 </div>
 
 <main>
@@ -627,7 +656,7 @@ function showTab(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
-  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
   if (name === 'lexique') renderLexique();
   if (name === 'historique') renderHistorique();
   if (name === 'expert') renderExpert();
@@ -777,8 +806,11 @@ async function traduire() {
 function afficherResultat(input, r) {
   let html = `<div class="card result-card"><div class="card-body">`;
 
-  // Traduction principale
-  html += `<div class="result-main">${r.traduction}</div>`;
+  // Traduction principale + bouton copier
+  html += `<div class="result-main-row">
+    <div class="result-main">${r.traduction}</div>
+    <button class="btn-copy" onclick="copierTraduction('${r.traduction.replace(/'/g, "\\'")}')" title="Copier">📋</button>
+  </div>`;
 
   // a) Structure utilisée
   if (r.structure) {
@@ -821,8 +853,22 @@ function afficherResultat(input, r) {
     </div>`;
   }
 
+  // Lien Fare Vānaʻa
+  html += `<div style="margin-top:12px; text-align:right;">
+    <a href="https://www.farevanaa.pf/fra/dictionnaire" target="_blank" class="lien-farevanaa">
+      Vérifier sur Fare Vānaʻa →
+    </a>
+  </div>`;
+
   html += `</div></div>`;
   document.getElementById('result-zone').innerHTML = html;
+}
+
+function copierTraduction(texte) {
+  navigator.clipboard.writeText(texte).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    if (btn) { btn.textContent = '✅'; setTimeout(() => btn.textContent = '📋', 2000); }
+  });
 }
 
 // ============================================================
