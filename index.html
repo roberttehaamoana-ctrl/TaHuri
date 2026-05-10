@@ -725,6 +725,7 @@
         <button class="expert-tab active" onclick="showExpertTab('corrections')">✏️ Corrections</button>
         <button class="expert-tab" onclick="showExpertTab('regles')">📋 Règles</button>
         <button class="expert-tab" onclick="showExpertTab('glossaire')">📌 Glossaire</button>
+        <button class="expert-tab" onclick="showExpertTab('historique')">🕐 Historique</button>
       </div>
 
       <!-- CORRECTIONS -->
@@ -767,6 +768,17 @@
         </div>
       </div>
 
+      <div id="etab-historique" class="card" style="display:none;">
+        <div class="card-header">Historique des corrections</div>
+        <div class="card-body">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:0.8rem; color:var(--texte-doux);">Toutes les entrées ajoutées</span>
+            <button class="btn-sm" onclick="exporterHistorique()">⬇️ Exporter</button>
+          </div>
+          <div id="historique-expert-list"></div>
+        </div>
+      </div>
+
       <button class="btn-sm danger" onclick="lockExpert()" style="width:100%; margin-top:4px;">🔒 Verrouiller</button>
     </div>
   </div>
@@ -784,9 +796,9 @@
 const LEXIQUE = [
   {id:1,fr:"oiseau",tah:"manu",theme:"Animaux"},{id:2,fr:"chat",tah:"mīmī",theme:"Animaux"},{id:3,fr:"chien",tah:"ʻūrī",theme:"Animaux"},{id:4,fr:"grenouille",tah:"rana",theme:"Animaux"},{id:5,fr:"lapin",tah:"rāpiti",theme:"Animaux"},{id:6,fr:"lion",tah:"riona",theme:"Animaux"},{id:7,fr:"poisson",tah:"iʻa",theme:"Animaux"},{id:8,fr:"tigre",tah:"tāita",theme:"Animaux"},{id:9,fr:"tortue",tah:"honu",theme:"Animaux"},{id:10,fr:"girafe",tah:"ʻaʻīroa",theme:"Animaux"},{id:11,fr:"ours",tah:"pea",theme:"Animaux"},{id:12,fr:"éléphant",tah:"ʻerefani",theme:"Animaux"},{id:13,fr:"zèbre",tah:"puaʻarehenua toretore",theme:"Animaux"},{id:14,fr:"singe",tah:"ʻūrī taʻata",theme:"Animaux"},{id:15,fr:"pieuvre",tah:"feʻe",theme:"Animaux"},{id:16,fr:"insecte",tah:"manumanu",theme:"Animaux"},{id:17,fr:"araignée",tah:"tūtūrahonui",theme:"Animaux"},{id:18,fr:"fourmi",tah:"rō",theme:"Animaux"},{id:19,fr:"lézard",tah:"moʻo",theme:"Animaux"},{id:20,fr:"cochon",tah:"puaʻa",theme:"Animaux"},{id:21,fr:"coq",tah:"moa",theme:"Animaux"},{id:22,fr:"poule",tah:"moa vahine",theme:"Animaux"},{id:23,fr:"mouton",tah:"mamoe",theme:"Animaux"},{id:24,fr:"vache",tah:"pipi",theme:"Animaux"},{id:25,fr:"cheval",tah:"hōiho",theme:"Animaux"},{id:26,fr:"requin",tah:"māʻo",theme:"Animaux"},{id:27,fr:"raie",tah:"fai",theme:"Animaux"},{id:28,fr:"crabe",tah:"pāpaʻi",theme:"Animaux"},{id:29,fr:"crevette",tah:"ōura",theme:"Animaux"},{id:30,fr:"baleine",tah:"tōpua",theme:"Animaux"},{id:31,fr:"dauphin",tah:"naunau",theme:"Animaux"},
   {id:32,fr:"jambe",tah:"ʻāvae",theme:"Corps"},{id:33,fr:"bras",tah:"rima",theme:"Corps"},{id:34,fr:"visage",tah:"aro",theme:"Corps"},{id:35,fr:"main",tah:"ʻapu rima",theme:"Corps"},{id:36,fr:"bouche",tah:"vaha",theme:"Corps"},{id:37,fr:"langue",tah:"arero",theme:"Corps"},{id:38,fr:"dents",tah:"niho",theme:"Corps"},{id:39,fr:"tête",tah:"upoʻo",theme:"Corps"},{id:40,fr:"nez",tah:"ihu",theme:"Corps"},{id:41,fr:"oreille",tah:"taria",theme:"Corps"},{id:42,fr:"cheveux",tah:"rouru",theme:"Corps"},{id:43,fr:"yeux",tah:"mata",theme:"Corps"},{id:44,fr:"pied",tah:"ʻāvae",theme:"Corps"},{id:45,fr:"genou",tah:"turi ʻāvae",theme:"Corps"},{id:46,fr:"épaule",tah:"paʻufifi",theme:"Corps"},{id:47,fr:"cou",tah:"ʻārapoʻa",theme:"Corps"},{id:48,fr:"coude",tah:"poro rima",theme:"Corps"},{id:49,fr:"doigt",tah:"manimani rima",theme:"Corps"},{id:50,fr:"orteil",tah:"manimani ʻāvae",theme:"Corps"},{id:51,fr:"dos",tah:"tuarā",theme:"Corps"},{id:52,fr:"ventre",tah:"ōpū",theme:"Corps"},{id:53,fr:"cœur",tah:"puʻe",theme:"Corps"},{id:54,fr:"sang",tah:"toto",theme:"Corps"},{id:55,fr:"os",tah:"ivi",theme:"Corps"},
-  {id:57,fr:"table",tah:"tēfaʻi",theme:"École"},{id:58,fr:"chaise",tah:"nohoraa",theme:"École"},{id:59,fr:"crayon",tah:"peni",theme:"École"},{id:60,fr:"cahier",tah:"tuhituhiraa",theme:"École"},{id:61,fr:"livre",tah:"puta",theme:"École"},{id:62,fr:"règle",tah:"rūra",theme:"École"},{id:63,fr:"gomme",tah:"horofenua",theme:"École"},{id:65,fr:"tableau",tah:"tāpura",theme:"École"},{id:67,fr:"maître",tah:"feia haʻapiʻi",theme:"École"},{id:69,fr:"élève",tah:"tamariʻi haʻapiʻi",theme:"École"},{id:72,fr:"ciseaux",tah:"sīsō",theme:"École"},{id:73,fr:"colle",tah:"hōpē",theme:"École"},
-  {id:76,fr:"pain",tah:"faraoa",theme:"Nourriture"},{id:77,fr:"eau",tah:"pape",theme:"Nourriture"},{id:79,fr:"banane",tah:"meʻa",theme:"Nourriture"},{id:80,fr:"taro",tah:"taro",theme:"Nourriture"},{id:81,fr:"pomme",tah:"ʻāpara",theme:"Nourriture"},{id:82,fr:"orange",tah:"ʻōrani",theme:"Nourriture"},{id:83,fr:"mangue",tah:"vī",theme:"Nourriture"},{id:84,fr:"noix de coco",tah:"haari",theme:"Nourriture"},{id:85,fr:"papaye",tah:"ʻirita",theme:"Nourriture"},{id:86,fr:"ananas",tah:"painapo",theme:"Nourriture"},{id:87,fr:"citron",tah:"rēmō",theme:"Nourriture"},{id:88,fr:"riz",tah:"raiti",theme:"Nourriture"},{id:90,fr:"poisson (cuisine)",tah:"iʻa",theme:"Nourriture"},{id:91,fr:"sel",tah:"miti",theme:"Nourriture"},{id:93,fr:"œuf",tah:"hūero moa",theme:"Nourriture"},{id:95,fr:"jus",tah:"vai hotu",theme:"Nourriture"},{id:96,fr:"thé",tah:"tī",theme:"Nourriture"},{id:97,fr:"café",tah:"kafe",theme:"Nourriture"},
-  {id:98,fr:"arbre",tah:"tumu rāʻau",theme:"Nature"},{id:99,fr:"fleur",tah:"tiare",theme:"Nature"},{id:100,fr:"mer",tah:"moana",theme:"Nature"},{id:101,fr:"lagon",tah:"ō",theme:"Nature"},{id:102,fr:"montagne",tah:"mauʻa",theme:"Nature"},{id:103,fr:"rivière",tah:"pape hūra",theme:"Nature"},{id:104,fr:"plage",tah:"one",theme:"Nature"},{id:106,fr:"pierre",tah:"ʻōfai",theme:"Nature"},{id:107,fr:"terre",tah:"fenua",theme:"Nature"},{id:108,fr:"soleil",tah:"rā",theme:"Nature"},{id:109,fr:"lune",tah:"māraʻī",theme:"Nature"},{id:110,fr:"étoile",tah:"fetia",theme:"Nature"},{id:111,fr:"ciel",tah:"raʻi",theme:"Nature"},{id:112,fr:"nuage",tah:"aoʻa",theme:"Nature"},{id:113,fr:"pluie",tah:"ua",theme:"Nature"},{id:114,fr:"vent",tah:"māta'i",theme:"Nature"},{id:115,fr:"arc-en-ciel",tah:"ānuanua",theme:"Nature"},{id:116,fr:"feuille",tah:"rau",theme:"Nature"},{id:117,fr:"racine",tah:"aʻa",theme:"Nature"},{id:118,fr:"fruit",tah:"hotu",theme:"Nature"},{id:119,fr:"île",tah:"motu",theme:"Nature"},
+  {id:57,fr:"table",tah:"tēfaʻi",theme:"École"},{id:58,fr:"chaise",tah:"nohoraa",theme:"École"},{id:59,fr:"crayon",tah:"peni",theme:"École"},{id:60,fr:"cahier",tah:"tuhituhiraa",theme:"École"},{id:61,fr:"livre",tah:"puta",theme:"École"},{id:62,fr:"règle",tah:"rūra",theme:"École"},{id:63,fr:"gomme",tah:"horofenua",theme:"École"},{id:65,fr:"tableau",tah:"tāpura",theme:"École"},{id:67,fr:"maître",tah:"feia haʻapiʻi",theme:"École"},{id:69,fr:"élève",tah:"tamariʻi haʻapiʻi",theme:"École"},{id:72,fr:"ciseaux",tah:"sīsō",theme:"École"},{id:73,fr:"colle",tah:"tāpiri",theme:"École"},
+  {id:76,fr:"pain",tah:"faraoa",theme:"Nourriture"},{id:77,fr:"eau",tah:"pape",theme:"Nourriture"},{id:79,fr:"banane",tah:"meʻa",theme:"Nourriture"},{id:80,fr:"taro",tah:"taro",theme:"Nourriture"},{id:81,fr:"pomme",tah:"ʻāpara",theme:"Nourriture"},{id:82,fr:"orange",tah:"ʻōrani",theme:"Nourriture"},{id:83,fr:"mangue",tah:"vī",theme:"Nourriture"},{id:84,fr:"noix de coco",tah:"haari",theme:"Nourriture"},{id:85,fr:"papaye",tah:"ʻirita",theme:"Nourriture"},{id:86,fr:"ananas",tah:"painapo",theme:"Nourriture"},{id:87,fr:"citron",tah:"rēmō",theme:"Nourriture"},{id:88,fr:"riz",tah:"raiti",theme:"Nourriture"},{id:90,fr:"poisson (cuisine)",tah:"iʻa",theme:"Nourriture"},{id:91,fr:"sel",tah:"miti",theme:"Nourriture"},{id:93,fr:"œuf",tah:"hūero moa",theme:"Nourriture"},{id:95,fr:"jus",tah:"vai hotu",theme:"Nourriture"},{id:96,fr:"thé",tah:"tī",theme:"Nourriture"},{id:97,fr:"café",tah:"kafe",theme:"Nourriture"},{id:98,fr:"chocolat",tah:"tōtōrā",theme:"Nourriture"},
+  {id:98,fr:"arbre",tah:"tumu rāʻau",theme:"Nature"},{id:99,fr:"fleur",tah:"tiare",theme:"Nature"},{id:100,fr:"mer",tah:"moana",theme:"Nature"},{id:101,fr:"lagon",tah:"ō",theme:"Nature"},{id:102,fr:"montagne",tah:"mauʻa",theme:"Nature"},{id:103,fr:"rivière",tah:"pape hūra",theme:"Nature"},{id:104,fr:"plage",tah:"one",theme:"Nature"},{id:106,fr:"pierre",tah:"ʻōfai",theme:"Nature"},{id:107,fr:"terre",tah:"fenua",theme:"Nature"},{id:108,fr:"soleil",tah:"rā",theme:"Nature"},{id:109,fr:"lune",tah:"māraʻī",theme:"Nature"},{id:110,fr:"étoile",tah:"fetiʻa",theme:"Nature"},{id:111,fr:"ciel",tah:"raʻi",theme:"Nature"},{id:112,fr:"nuage",tah:"aoʻa",theme:"Nature"},{id:113,fr:"pluie",tah:"ua",theme:"Nature"},{id:114,fr:"vent",tah:"māta'i",theme:"Nature"},{id:115,fr:"arc-en-ciel",tah:"ānuanua",theme:"Nature"},{id:116,fr:"feuille",tah:"rau",theme:"Nature"},{id:117,fr:"racine",tah:"aʻa",theme:"Nature"},{id:118,fr:"fruit",tah:"hotu",theme:"Nature"},{id:119,fr:"île",tah:"motu",theme:"Nature"},
   {id:121,fr:"un",tah:"hōʻē",theme:"Nombres"},{id:122,fr:"deux",tah:"piti",theme:"Nombres"},{id:123,fr:"trois",tah:"toru",theme:"Nombres"},{id:124,fr:"quatre",tah:"maha",theme:"Nombres"},{id:125,fr:"cinq",tah:"pae",theme:"Nombres"},{id:126,fr:"six",tah:"ono",theme:"Nombres"},{id:127,fr:"sept",tah:"hitu",theme:"Nombres"},{id:128,fr:"huit",tah:"vaʻu",theme:"Nombres"},{id:129,fr:"neuf",tah:"iva",theme:"Nombres"},{id:130,fr:"dix",tah:"hōʻē ʻahuru",theme:"Nombres"},{id:131,fr:"vingt",tah:"piti ʻahuru",theme:"Nombres"},{id:132,fr:"cent",tah:"hānere",theme:"Nombres"},{id:133,fr:"mille",tah:"tausani",theme:"Nombres"},
   {id:134,fr:"rouge",tah:"ʻūteʻute",theme:"Couleurs"},{id:135,fr:"bleu",tah:"ninamu",theme:"Couleurs"},{id:136,fr:"vert",tah:"totoro",theme:"Couleurs"},{id:137,fr:"jaune",tah:"reʻareʻa",theme:"Couleurs"},{id:138,fr:"blanc",tah:"ʻōreʻore",theme:"Couleurs"},{id:139,fr:"noir",tah:"ʻēteʻete",theme:"Couleurs"},{id:140,fr:"rose",tah:"ʻūteʻute māmā",theme:"Couleurs"},
   {id:143,fr:"père",tah:"metua tāne",theme:"Famille"},{id:144,fr:"mère",tah:"metua vahine",theme:"Famille"},{id:145,fr:"enfant",tah:"tamaiti",theme:"Famille"},{id:146,fr:"frère",tah:"taeʻa tāne",theme:"Famille"},{id:147,fr:"sœur",tah:"taeʻa vahine",theme:"Famille"},{id:148,fr:"grand-père",tah:"tūhine tāne",theme:"Famille"},{id:149,fr:"grand-mère",tah:"tūhine vahine",theme:"Famille"},{id:152,fr:"bébé",tah:"pēpē",theme:"Famille"},{id:153,fr:"homme",tah:"tāne",theme:"Famille"},{id:154,fr:"femme",tah:"vahine",theme:"Famille"},
@@ -1089,7 +1101,7 @@ function filtrerLexique() {
     <div class="lex-item" onclick="chargerLexique('${e.fr}')">
       <div>
         <div class="lex-fr">${e.fr}</div>
-        <div class="lex-tah">${e.tah}</div>
+        <div class="lex-tah">${corrigerTah(e.fr, e.tah)}</div>
       </div>
       <span class="lex-theme">${e.theme}</span>
     </div>`).join('');
@@ -1136,7 +1148,7 @@ function showExpertTab(tab) {
   expertTabActif = tab;
   document.querySelectorAll('.expert-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
-  ['corrections','regles','glossaire'].forEach(t => {
+  ['corrections','regles','glossaire','historique'].forEach(t => {
     document.getElementById('etab-' + t).style.display = t === tab ? 'block' : 'none';
   });
   renderExpert();
@@ -1147,6 +1159,50 @@ function renderExpert() {
   renderCorrections();
   renderRegles();
   renderGlossaire();
+  renderHistoriqueExpert();
+}
+
+// HISTORIQUE EXPERT
+let historiqueExpert = JSON.parse(localStorage.getItem('tahuri_historique_expert') || '[]');
+
+function ajouterHistorique(type, fr, tah, note) {
+  const date = new Date().toLocaleDateString('fr-FR');
+  historiqueExpert.unshift({ id: Date.now(), type, fr, tah, note, date });
+  localStorage.setItem('tahuri_historique_expert', JSON.stringify(historiqueExpert));
+}
+
+function renderHistoriqueExpert() {
+  const el = document.getElementById('historique-expert-list');
+  if (!el) return;
+  if (historiqueExpert.length === 0) {
+    el.innerHTML = '<div class="empty">Aucune correction enregistrée</div>';
+    return;
+  }
+  el.innerHTML = historiqueExpert.map(h => `
+    <div class="entry-item">
+      <div class="entry-content">
+        <div class="entry-main">${h.fr} → ${h.tah}</div>
+        <div class="entry-note">${h.type} • ${h.date}${h.note ? ' • ' + h.note : ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function exporterHistorique() {
+  const lignes = ['Type | Français | Reo Tahiti | Note | Date'];
+  historiqueExpert.forEach(h => {
+    lignes.push(h.type + ' | ' + h.fr + ' | ' + h.tah + ' | ' + (h.note||'') + ' | ' + h.date);
+  });
+  const blob = new Blob([lignes.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'tahuri-corrections-' + new Date().toISOString().slice(0,10) + '.txt';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// CORRECTION AUTOMATIQUE — applique le glossaire sur un terme tahitien
+function corrigerTah(fr, tah) {
+  const g = glossaire.find(e => e.fr.toLowerCase() === fr.toLowerCase());
+  return g ? g.tah : tah;
 }
 
 // CORRECTIONS
@@ -1157,6 +1213,7 @@ function addCorrection() {
   if (!wrong || !correct) return;
   corrections.push({ id: Date.now(), wrong, correct, note });
   localStorage.setItem('tahuri_corrections', JSON.stringify(corrections));
+  ajouterHistorique('Correction', wrong, correct, note);
   document.getElementById('c-wrong').value = '';
   document.getElementById('c-correct').value = '';
   document.getElementById('c-note').value = '';
@@ -1218,6 +1275,7 @@ function addGlossaire() {
   if (!fr || !tah) return;
   glossaire.push({ id: Date.now(), fr, tah, note });
   localStorage.setItem('tahuri_glossaire', JSON.stringify(glossaire));
+  ajouterHistorique('Glossaire', fr, tah, note);
   document.getElementById('g-fr').value = '';
   document.getElementById('g-tah').value = '';
   document.getElementById('g-note').value = '';
@@ -1308,7 +1366,7 @@ function afficherQuestionEx() {
   let question, bonneReponse, distracteurs;
 
   if (exMode === 'vocab') {
-    question = item.tah;
+    question = corrigerTah(item.fr, item.tah);
     bonneReponse = item.fr;
     // Piocher 3 distracteurs aléatoires
     distracteurs = LEXIQUE
@@ -1415,8 +1473,8 @@ function afficherCarteFC() {
     terminerFlashcards(); return;
   }
   const carte = fcDeck[fcIndex];
-  const question = fcDirection === 'fr-to-tah' ? carte.fr : carte.tah;
-  const reponse = fcDirection === 'fr-to-tah' ? carte.tah : carte.fr;
+  const question = fcDirection === 'fr-to-tah' ? carte.fr : corrigerTah(carte.fr, carte.tah);
+  const reponse = fcDirection === 'fr-to-tah' ? corrigerTah(carte.fr, carte.tah) : carte.fr;
 
   document.getElementById('fc-question').textContent = question;
   document.getElementById('fc-reponse-texte').textContent = reponse;
