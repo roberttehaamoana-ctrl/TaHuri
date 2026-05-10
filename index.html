@@ -53,6 +53,18 @@
   .logo span { color: var(--or); }
   .tagline { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; letter-spacing: 0.5px; position: relative; }
 
+  .phrase-du-jour {
+    background: linear-gradient(135deg, var(--lagon-dark), var(--lagon));
+    color: white;
+    padding: 14px 20px;
+    text-align: center;
+    border-bottom: 2px solid var(--or);
+  }
+  .pdj-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
+  .pdj-tah { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--or); }
+  .pdj-fr { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+  .pdj-note { font-size: 0.75rem; opacity: 0.6; margin-top: 4px; font-style: italic; }
+
   /* NAVIGATION TABS */
   .tabs {
     display: flex;
@@ -471,6 +483,13 @@
   <div class="logo">T<span>ā</span>huri</div>
   <div class="tagline">Traducteur reo Tahiti — Normes Fare Vānaʻa</div>
 </header>
+
+<div class="phrase-du-jour" id="phrase-du-jour">
+  <div class="pdj-label">🌺 Expression du jour</div>
+  <div class="pdj-tah" id="pdj-tah">—</div>
+  <div class="pdj-fr" id="pdj-fr">—</div>
+  <div class="pdj-note" id="pdj-note"></div>
+</div>
 
 <div class="tabs">
   <button class="tab active" id="tab-traduire" onclick="showTab('traduire')">🌺 Traduire</button>
@@ -1094,9 +1113,55 @@ function renderGlossaire() {
 }
 
 // ============================================================
+// PHRASE DU JOUR
+// ============================================================
+const EXPRESSIONS = [
+  { tah: "'Ia ora na !", fr: "Bonjour !", note: "'Ia = particule situative + ora = vivre + na = déictique" },
+  { tah: "Māuruuru roa !", fr: "Merci beaucoup !", note: "māuruuru = gratitude, roa = intensificateur" },
+  { tah: "Nānā !", fr: "Au revoir !", note: "Formule de séparation affectueuse" },
+  { tah: "'O vai tō 'oe i'oa ?", fr: "Comment tu t'appelles ?", note: "'O vai = qui (pour les personnes), tō 'oe = ton (ordre O)" },
+  { tah: "'O ... tō'u i'oa.", fr: "Mon nom est ...", note: "'O = présentatif, tō'u = mon (ordre O)" },
+  { tah: "E haere au i te fare ha'api'ira'a.", fr: "Je vais à l'école.", note: "E = inaccompli, haere = aller, au après e" },
+  { tah: "E mea nehenehe te fenua.", fr: "Le pays est beau.", note: "E mea + adjectif = attribut stable" },
+  { tah: "Tei hea 'oe ?", fr: "Où es-tu ?", note: "Tei = locatif, hea = où" },
+  { tah: "'Ua tāmā'a vau.", fr: "J'ai mangé.", note: "'Ua = accompli, vau après a (tāmā'a finit par a)" },
+  { tah: "'Ua 'ite ānei 'oe i te reo Tahiti ?", fr: "Connais-tu le tahitien ?", note: "'Ua = accompli, ānei = particule interrogative" },
+  { tah: "Tē haere nei au i te mātete.", fr: "Je suis en train d'aller au marché.", note: "Tē...nei = progressif, mātete = marché" },
+  { tah: "'Aita vau i rohirohi.", fr: "Je ne suis pas fatigué.", note: "'Aita + i = accompli négatif, rohirohi = fatigué" },
+  { tah: "E mea nīnamu te miti.", fr: "La mer est bleue.", note: "nīnamu = bleu, miti = mer (moana = océan)" },
+  { tah: "'A haere mai !", fr: "Viens !", note: "'A = impératif, mai = déictique de rapprochement" },
+  { tah: "Nō Puna'auia au.", fr: "Je suis de Punaauia.", note: "Nō = préposition d'origine (ordre O)" },
+  { tah: "E po'ia tōna.", fr: "Il/elle a faim.", note: "Structure 'avoir' : E + état + tō + possesseur" },
+  { tah: "Tei te fare 'ōna.", fr: "Il/elle est à la maison.", note: "Tei = locatif, fare = maison" },
+  { tah: "E pae matahiti tōna.", fr: "Il/elle a cinq ans.", note: "pae = cinq, matahiti = année" },
+  { tah: "Māuruuru nō tō 'outou fa'aro'ora'a mai.", fr: "Merci de votre attention.", note: "fa'aro'ora'a mai = le fait d'écouter/recevoir" },
+  { tah: "'Ia ora na tātou !", fr: "Bonjour à nous tous !", note: "Salutation collective inclusive avec tātou" },
+  { tah: "E hina'aro vau e ha'api'i i te reo Tahiti.", fr: "Je veux apprendre le tahitien.", note: "hina'aro = vouloir, ha'api'i = apprendre" },
+  { tah: "E mea maita'i.", fr: "C'est bien.", note: "maita'i = bon/bien, structure attributive simple" },
+  { tah: "'Eiaha e parau ha'apūai !", fr: "Ne parle pas fort !", note: "'Eiaha = interdiction, ha'apūai = fort/avec force" },
+  { tah: "E mau pīahi rātou.", fr: "Ce sont des élèves.", note: "pīahi = élève, E + nom + sujet = identité" },
+  { tah: "Tē ha'api'i nei au.", fr: "Je suis en train d'apprendre.", note: "Tē...nei = progressif en cours" },
+  { tah: "E aha tā 'oe 'ohipa ?", fr: "Quel est ton travail ?", note: "tā 'oe = ton (ordre A), 'ohipa = travail" },
+  { tah: "Nō hea 'oe ?", fr: "Tu viens d'où ?", note: "Nō hea = de où, question d'origine" },
+  { tah: "'Ua roahia te mahana.", fr: "La journée a été longue.", note: "'Ua = accompli, roahia = rendu long/prolongé" },
+  { tah: "Maeva !", fr: "Bienvenue !", note: "Formule d'accueil traditionnelle polynésienne" },
+  { tah: "'A ha'apa'o maita'i !", fr: "Faites attention !", note: "'A = impératif, ha'apa'o = faire attention, maita'i = bien" },
+];
+
+function afficherPhraseduJour() {
+  const aujourd = new Date();
+  const index = (aujourd.getFullYear() * 365 + aujourd.getMonth() * 30 + aujourd.getDate()) % EXPRESSIONS.length;
+  const expr = EXPRESSIONS[index];
+  document.getElementById('pdj-tah').textContent = expr.tah;
+  document.getElementById('pdj-fr').textContent = expr.fr;
+  document.getElementById('pdj-note').textContent = expr.note;
+}
+
+// ============================================================
 // INIT
 // ============================================================
 checkApiBanner();
+afficherPhraseduJour();
 </script>
 </body>
 </html>
