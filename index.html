@@ -6,6 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Tāhuri">
+<meta name="theme-color" content="#0D6E6E">
+<link rel="manifest" href="/manifest.json">
 <title>Tāhuri — Traducteur reo Tahiti</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1158,10 +1160,45 @@ function afficherPhraseduJour() {
 }
 
 // ============================================================
+// INSTALLATION iPhone (PWA)
+// ============================================================
+function afficherBandeauInstall() {
+  // Détecte Safari iOS et vérifie que l'app n'est pas déjà installée
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone;
+  const dejaDismiss = localStorage.getItem('tahuri_install_dismiss');
+
+  if (isIOS && !isStandalone && !dejaDismiss) {
+    const bandeau = document.createElement('div');
+    bandeau.id = 'install-bandeau';
+    bandeau.style.cssText = `
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--lagon); color: white;
+      padding: 14px 16px; display: flex; align-items: center;
+      justify-content: space-between; gap: 10px;
+      font-size: 0.85rem; z-index: 1000;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+    `;
+    bandeau.innerHTML = `
+      <span>📲 Installer Tāhuri : appuyez sur <strong>⬆️</strong> puis <strong>"Sur l'écran d'accueil"</strong></span>
+      <button onclick="dismissInstall()" style="background:none;border:1.5px solid rgba(255,255,255,0.5);border-radius:6px;color:white;padding:4px 10px;cursor:pointer;font-size:0.8rem;flex-shrink:0;">✕</button>
+    `;
+    document.body.appendChild(bandeau);
+  }
+}
+
+function dismissInstall() {
+  localStorage.setItem('tahuri_install_dismiss', '1');
+  const b = document.getElementById('install-bandeau');
+  if (b) b.remove();
+}
+
+// ============================================================
 // INIT
 // ============================================================
 checkApiBanner();
 afficherPhraseduJour();
+afficherBandeauInstall();
 </script>
 </body>
 </html>
