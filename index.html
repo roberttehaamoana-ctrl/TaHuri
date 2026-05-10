@@ -381,7 +381,29 @@
   .entry-main { font-weight: 600; color: var(--texte); }
   .entry-note { font-size: 0.78rem; color: var(--texte-doux); margin-top: 2px; }
 
-  /* EMPTY STATE */
+  .result-code {
+    background: #1a1a2e;
+    color: #a8ff78;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin-top: 4px;
+  }
+  .result-neg {
+    background: #fdecea;
+    border-left: 3px solid var(--erreur);
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+  }
+  .result-variante {
+    background: #f0f7f0;
+    border-left: 3px solid var(--succes);
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+  }
   .empty { text-align: center; padding: 30px 20px; color: #bbb; font-size: 0.9rem; }
 
   /* CONFIG API */
@@ -754,19 +776,49 @@ async function traduire() {
 
 function afficherResultat(input, r) {
   let html = `<div class="card result-card"><div class="card-body">`;
+
+  // Traduction principale
   html += `<div class="result-main">${r.traduction}</div>`;
 
-  if (r.variantes && r.variantes.length > 0) {
-    html += `<div class="result-section"><div class="result-label">Variantes</div><div class="result-text">${r.variantes.join(' • ')}</div></div>`;
+  // a) Structure utilisée
+  if (r.structure) {
+    html += `<div class="result-section">
+      <div class="result-label">a) Structure utilisée</div>
+      <div class="result-text">${r.structure}</div>
+    </div>`;
   }
-  if (r.analyse) {
-    html += `<div class="result-section collapsible" onclick="this.classList.toggle('closed')"><div class="result-label">Analyse grammaticale</div><div class="result-content result-text">${r.analyse}</div></div>`;
+
+  // b) Comparaison FR ↔ TAH
+  if (r.comparaison) {
+    const lignes = r.comparaison.split('\\n').filter(l => l.trim());
+    html += `<div class="result-section">
+      <div class="result-label">b) Comparaison FR ↔ TAH</div>
+      <div class="result-code">${lignes.map(l => `<div>${l}</div>`).join('')}</div>
+    </div>`;
   }
+
+  // c) Tournure négative
+  if (r.negative) {
+    html += `<div class="result-section">
+      <div class="result-label">c) Tournure négative</div>
+      <div class="result-text result-neg">${r.negative}</div>
+    </div>`;
+  }
+
+  // d) Si tu veux dire...
+  if (r.si_tu_veux_dire) {
+    html += `<div class="result-section">
+      <div class="result-label">d) Si tu veux dire…</div>
+      <div class="result-text result-variante">${r.si_tu_veux_dire}</div>
+    </div>`;
+  }
+
+  // Note culturelle
   if (r.note) {
-    html += `<div class="result-section collapsible" onclick="this.classList.toggle('closed')"><div class="result-label">Note culturelle</div><div class="result-content result-text">${r.note}</div></div>`;
-  }
-  if (r.exemple) {
-    html += `<div class="result-section"><div class="result-label">Exemple d'usage</div><div class="result-text" style="font-style:italic">${r.exemple}</div></div>`;
+    html += `<div class="result-section">
+      <div class="result-label">Note culturelle</div>
+      <div class="result-text" style="font-style:italic">${r.note}</div>
+    </div>`;
   }
 
   html += `</div></div>`;
