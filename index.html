@@ -1199,16 +1199,20 @@ function terminerFlashcards() {
   document.getElementById('fc-fin').style.display = 'block';
   document.getElementById('fc-fin-score').textContent = `${fcReussis} / ${total} — ${pct}%`;
   document.getElementById('fc-fin-message').textContent =
-    pct === 100 ? 'Maita\'i roa ! Parfait !' :
-    pct >= 70 ? 'Maita\'i ! Très bien !' :
+    pct === 100 ? "Maita'i roa ! Parfait !" :
+    pct >= 70 ? "Maita'i ! Très bien !" :
     pct >= 50 ? 'Pas mal, continue !' :
     'Encore un effort, tu vas y arriver !';
   document.getElementById('fc-progress-bar').style.width = '100%';
 }
 
 function relancerFlashcards() {
+  document.getElementById('fc-fin').style.display = 'none';
   document.getElementById('fc-card').style.display = 'flex';
-  demarrerFlashcards();
+  document.getElementById('fc-boutons').style.display = 'flex';
+  fcIndex = 0; fcReussis = 0; fcRates = 0;
+  fcDeck = fcDeck.sort(() => Math.random() - 0.5);
+  afficherCarteFC();
 }
 
 function quitterFlashcards() {
