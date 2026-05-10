@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tāhuri">
+<title>Tāhuri — Traducteur reo Tahiti</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --lagon: #0D6E6E;
+    --lagon-dark: #094e4e;
+    --or: #F4A020;
+    --sable: #F9F5EE;
+    --sable-dark: #EDE8DF;
+    --texte: #1A1A1A;
+    --texte-doux: #5a5a5a;
+    --blanc: #ffffff;
+    --erreur: #c0392b;
+    --succes: #27ae60;
+    --radius: 14px;
+    --ombre: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--sable);
+    color: var(--texte);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--lagon);
+    color: white;
+    padding: 20px 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; letter-spacing: 1px; position: relative; }
+  .logo span { color: var(--or); }
+  .tagline { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; letter-spacing: 0.5px; position: relative; }
+
+  /* NAVIGATION TABS */
+  .tabs {
+    display: flex;
+    background: var(--lagon-dark);
+    border-bottom: 2px solid var(--or);
+  }
+  .tab {
+    flex: 1;
+    padding: 13px 8px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .tab.active {
+    color: var(--or);
+    border-bottom: 3px solid var(--or);
+    margin-bottom: -2px;
+  }
+
+  /* MAIN */
+  main { padding: 16px; max-width: 640px; margin: 0 auto; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* CARD */
+  .card {
+    background: var(--blanc);
+    border-radius: var(--radius);
+    box-shadow: var(--ombre);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--lagon);
+    color: white;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .card-body { padding: 14px; }
+
+  /* DIRECTION TOGGLE */
+  .direction-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--sable-dark);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+  }
+  .lang-label { font-size: 0.85rem; font-weight: 600; color: var(--texte-doux); transition: color 0.2s; }
+  .lang-label.active { color: var(--lagon); }
+  .swap-btn {
+    background: var(--lagon);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s, background 0.2s;
+    flex-shrink: 0;
+  }
+  .swap-btn:hover { background: var(--lagon-dark); transform: rotate(180deg); }
+
+  /* TEXTAREA */
+  textarea {
+    width: 100%;
+    border: 2px solid var(--sable-dark);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    resize: none;
+    background: var(--sable);
+    color: var(--texte);
+    transition: border-color 0.2s;
+    min-height: 100px;
+  }
+  textarea:focus { outline: none; border-color: var(--lagon); background: white; }
+  textarea::placeholder { color: #bbb; }
+
+  /* CLAVIER VIRTUEL */
+  .clavier {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    background: var(--sable-dark);
+    border-radius: 10px;
+    margin: 8px 0;
+    justify-content: center;
+  }
+  .key {
+    background: white;
+    border: 1.5px solid #ddd;
+    border-radius: 7px;
+    padding: 7px 11px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+    color: var(--texte);
+  }
+  .key:hover { background: var(--lagon); color: white; border-color: var(--lagon); }
+  .key.special { background: var(--or); color: white; border-color: var(--or); font-weight: 700; }
+  .key.special:hover { background: #d4860e; border-color: #d4860e; }
+
+  /* BOUTON TRADUIRE */
+  .btn-traduire {
+    width: 100%;
+    background: var(--lagon);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+  .btn-traduire:hover { background: var(--lagon-dark); }
+  .btn-traduire:active { transform: scale(0.98); }
+  .btn-traduire:disabled { background: #aaa; cursor: not-allowed; }
+
+  /* RÉSULTAT */
+  .result-card { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--lagon);
+    line-height: 1.3;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--sable-dark);
+  }
+
+  .result-section { margin-bottom: 8px; }
+  .result-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--or);
+    margin-bottom: 3px;
+  }
+  .result-text { font-size: 0.9rem; color: var(--texte-doux); line-height: 1.5; }
+
+  .collapsible { cursor: pointer; }
+  .collapsible .result-label::after { content: ' ▾'; }
+  .collapsible.closed .result-content { display: none; }
+  .collapsible.closed .result-label::after { content: ' ▸'; }
+
+  /* LOADING */
+  .spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ERREUR */
+  .erreur {
+    background: #fdecea;
+    border: 1px solid #f5c6c6;
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--erreur);
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+
+  /* HISTORIQUE */
+  .historique-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--sable-dark);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .historique-item:hover { background: var(--sable); }
+  .historique-item:last-child { border-bottom: none; }
+  .hist-input { font-size: 0.85rem; color: var(--texte-doux); }
+  .hist-output { font-size: 0.9rem; font-weight: 600; color: var(--lagon); margin-top: 2px; }
+  .hist-meta { font-size: 0.72rem; color: #bbb; margin-top: 2px; }
+
+  /* LEXIQUE */
+  .search-input {
+    width: 100%;
+    border: 2px solid var(--sable-dark);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    background: white;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--lagon); }
+
+  .theme-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--lagon);
+    background: white;
+    color: var(--lagon);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip.active, .chip:hover { background: var(--lagon); color: white; }
+
+  .lex-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sable-dark);
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .lex-item:hover { background: var(--sable); }
+  .lex-item:last-child { border-bottom: none; }
+  .lex-fr { font-size: 0.9rem; color: var(--texte-doux); }
+  .lex-tah { font-size: 0.95rem; font-weight: 600; color: var(--lagon); font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; }
+  .lex-theme { font-size: 0.7rem; color: #bbb; background: var(--sable-dark); padding: 2px 8px; border-radius: 10px; }
+
+  /* EXPERT */
+  .password-screen { text-align: center; padding: 30px 20px; }
+  .password-screen h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--lagon); margin-bottom: 8px; }
+  .password-screen p { font-size: 0.85rem; color: var(--texte-doux); margin-bottom: 20px; }
+  .pwd-input {
+    width: 100%; max-width: 280px;
+    border: 2px solid var(--sable-dark);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1rem;
+    text-align: center;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+    display: block;
+    margin: 0 auto 12px;
+  }
+  .pwd-input:focus { outline: none; border-color: var(--lagon); }
+  .btn-sm {
+    background: var(--lagon);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 4px;
+    transition: background 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-sm:hover { background: var(--lagon-dark); }
+  .btn-sm.danger { background: var(--erreur); }
+  .btn-sm.danger:hover { background: #a93226; }
+  .btn-sm.secondary { background: var(--sable-dark); color: var(--texte); }
+  .btn-sm.secondary:hover { background: #d5d0c7; }
+
+  .expert-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+  .expert-tab {
+    flex: 1;
+    padding: 9px 4px;
+    background: var(--sable-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--texte-doux);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .expert-tab.active { background: var(--lagon); color: white; }
+
+  .entry-form { background: var(--sable); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .entry-form input, .entry-form textarea, .entry-form select {
+    width: 100%;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    background: white;
+  }
+  .entry-form input:focus, .entry-form textarea:focus { outline: none; border-color: var(--lagon); }
+
+  .entry-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--sable-dark);
+  }
+  .entry-item:last-child { border-bottom: none; }
+  .entry-content { flex: 1; font-size: 0.88rem; }
+  .entry-main { font-weight: 600; color: var(--texte); }
+  .entry-note { font-size: 0.78rem; color: var(--texte-doux); margin-top: 2px; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 30px 20px; color: #bbb; font-size: 0.9rem; }
+
+  /* CONFIG API */
+  .api-config {
+    background: #fff8e8;
+    border: 1.5px solid var(--or);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .api-config h4 { color: var(--or); font-size: 0.85rem; margin-bottom: 8px; }
+  .api-config input {
+    width: 100%;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: monospace;
+    font-size: 0.82rem;
+    margin-bottom: 8px;
+  }
+  .api-config input:focus { outline: none; border-color: var(--or); }
+  .api-hint { font-size: 0.75rem; color: var(--texte-doux); margin-top: 4px; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 0.72rem;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">T<span>ā</span>huri</div>
+  <div class="tagline">Traducteur reo Tahiti — Normes Fare Vānaʻa</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('traduire')">🌺 Traduire</button>
+  <button class="tab" onclick="showTab('lexique')">📖 Lexique</button>
+  <button class="tab" onclick="showTab('historique')">🕐 Historique</button>
+  <button class="tab" onclick="showTab('expert')">⚙️ Expert</button>
+</div>
+
+<main>
+
+  <!-- ===== TRADUCTION ===== -->
+  <div id="screen-traduire" class="screen active">
+
+    <div class="api-config" id="api-config-banner">
+      <h4>🔑 Clé API Anthropic requise</h4>
+      <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
+      <button class="btn-sm" onclick="saveApiKey()">Enregistrer</button>
+      <p class="api-hint">La clé est stockée localement sur cet appareil uniquement. Obtenez-la sur console.anthropic.com</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="direction-bar">
+          <span class="lang-label active" id="label-src">🇫🇷 Français</span>
+          <button class="swap-btn" onclick="swapDirection()" title="Inverser la direction">⇄</button>
+          <span class="lang-label" id="label-tgt">🌺 Reo Tahiti</span>
+        </div>
+
+        <textarea id="input-text" placeholder="Entrez le texte à traduire…" rows="4"
+          oninput="onInput()" onkeydown="handleKeydown(event)"></textarea>
+
+        <div class="clavier">
+          <button class="key special" onclick="insertEta()" title="ʻeta — coup de glotte (U+02BB)">ʻ</button>
+          <button class="key special" onclick="applyTarava()" title="tārava — macron sur la voyelle précédente">ā</button>
+        </div>
+
+        <button class="btn-traduire" id="btn-traduire" onclick="traduire()">Traduire</button>
+      </div>
+    </div>
+
+    <div id="result-zone"></div>
+
+  </div>
+
+  <!-- ===== LEXIQUE ===== -->
+  <div id="screen-lexique" class="screen">
+    <div class="card">
+      <div class="card-body">
+        <input class="search-input" id="lex-search" placeholder="Rechercher en français ou en reo Tahiti…" oninput="filtrerLexique()">
+        <div class="theme-chips" id="theme-chips"></div>
+        <div id="lex-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORIQUE ===== -->
+  <div id="screen-historique" class="screen">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--sable-dark);">
+        <span style="font-weight:600; font-size:0.85rem;">Traductions récentes</span>
+        <button class="btn-sm secondary" onclick="clearHistorique()">Effacer</button>
+      </div>
+      <div id="historique-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== EXPERT ===== -->
+  <div id="screen-expert" class="screen">
+    <div id="expert-locked">
+      <div class="card">
+        <div class="card-body password-screen">
+          <h3>🔐 Espace Expert</h3>
+          <p>Accès réservé aux experts en reo Tahiti.<br>Mot de passe requis.</p>
+          <input class="pwd-input" type="password" id="pwd-input" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter') checkPassword()">
+          <br><button class="btn-sm" onclick="checkPassword()" style="margin-top:12px;">Accéder</button>
+          <p id="pwd-error" style="color:var(--erreur); font-size:0.8rem; margin-top:8px;"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="expert-unlocked" style="display:none;">
+      <div class="expert-tabs">
+        <button class="expert-tab active" onclick="showExpertTab('corrections')">✏️ Corrections</button>
+        <button class="expert-tab" onclick="showExpertTab('regles')">📋 Règles</button>
+        <button class="expert-tab" onclick="showExpertTab('glossaire')">📌 Glossaire</button>
+      </div>
+
+      <!-- CORRECTIONS -->
+      <div id="etab-corrections" class="card">
+        <div class="card-header">Corrections — Référence contextuelle</div>
+        <div class="card-body">
+          <div class="entry-form">
+            <input id="c-wrong" placeholder="Forme incorrecte">
+            <input id="c-correct" placeholder="Forme correcte (normes Fare Vānaʻa)">
+            <input id="c-note" placeholder="Note explicative (optionnel)">
+            <button class="btn-sm" onclick="addCorrection()">+ Ajouter</button>
+          </div>
+          <div id="corrections-list"></div>
+        </div>
+      </div>
+
+      <!-- RÈGLES -->
+      <div id="etab-regles" class="card" style="display:none;">
+        <div class="card-header">Règles — Préférences expertes</div>
+        <div class="card-body">
+          <div class="entry-form">
+            <textarea id="r-texte" placeholder="Ex: Toujours utiliser la forme longue des voyelles dans les termes cérémoniels" rows="3"></textarea>
+            <button class="btn-sm" onclick="addRegle()">+ Ajouter</button>
+          </div>
+          <div id="regles-list"></div>
+        </div>
+      </div>
+
+      <!-- GLOSSAIRE -->
+      <div id="etab-glossaire" class="card" style="display:none;">
+        <div class="card-header">Glossaire — Priorité absolue</div>
+        <div class="card-body">
+          <div class="entry-form">
+            <input id="g-fr" placeholder="Terme français">
+            <input id="g-tah" placeholder="Équivalent reo Tahiti (Fare Vānaʻa)">
+            <input id="g-note" placeholder="Domaine / contexte (optionnel)">
+            <button class="btn-sm" onclick="addGlossaire()">+ Ajouter</button>
+          </div>
+          <div id="glossaire-list"></div>
+        </div>
+      </div>
+
+      <button class="btn-sm danger" onclick="lockExpert()" style="width:100%; margin-top:4px;">🔒 Verrouiller</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Tāhuri • Normes orthographiques Fare Vānaʻa • ʻeta (U+02BB) • Macron tārava
+</footer>
+
+<script>
+// ============================================================
+// LEXIQUE (275 entrées)
+// ============================================================
+const LEXIQUE = [
+  {id:1,fr:"oiseau",tah:"manu",theme:"Animaux"},{id:2,fr:"chat",tah:"mīmī",theme:"Animaux"},{id:3,fr:"chien",tah:"ʻūrī",theme:"Animaux"},{id:4,fr:"grenouille",tah:"rana",theme:"Animaux"},{id:5,fr:"lapin",tah:"rāpiti",theme:"Animaux"},{id:6,fr:"lion",tah:"riona",theme:"Animaux"},{id:7,fr:"poisson",tah:"iʻa",theme:"Animaux"},{id:8,fr:"tigre",tah:"tāita",theme:"Animaux"},{id:9,fr:"tortue",tah:"honu",theme:"Animaux"},{id:10,fr:"girafe",tah:"ʻaʻīroa",theme:"Animaux"},{id:11,fr:"ours",tah:"pea",theme:"Animaux"},{id:12,fr:"éléphant",tah:"ʻerefani",theme:"Animaux"},{id:13,fr:"zèbre",tah:"puaʻarehenua toretore",theme:"Animaux"},{id:14,fr:"singe",tah:"ʻūrī taʻata",theme:"Animaux"},{id:15,fr:"pieuvre",tah:"feʻe",theme:"Animaux"},{id:16,fr:"insecte",tah:"manumanu",theme:"Animaux"},{id:17,fr:"araignée",tah:"tūtūrahonui",theme:"Animaux"},{id:18,fr:"fourmi",tah:"rō",theme:"Animaux"},{id:19,fr:"lézard",tah:"moʻo",theme:"Animaux"},{id:20,fr:"cochon",tah:"puaʻa",theme:"Animaux"},{id:21,fr:"coq",tah:"moa",theme:"Animaux"},{id:22,fr:"poule",tah:"moa vahine",theme:"Animaux"},{id:23,fr:"mouton",tah:"mamoe",theme:"Animaux"},{id:24,fr:"vache",tah:"pipi",theme:"Animaux"},{id:25,fr:"cheval",tah:"hōiho",theme:"Animaux"},{id:26,fr:"requin",tah:"māʻo",theme:"Animaux"},{id:27,fr:"raie",tah:"fai",theme:"Animaux"},{id:28,fr:"crabe",tah:"pāpaʻi",theme:"Animaux"},{id:29,fr:"crevette",tah:"ōura",theme:"Animaux"},{id:30,fr:"baleine",tah:"tōpua",theme:"Animaux"},{id:31,fr:"dauphin",tah:"naunau",theme:"Animaux"},
+  {id:32,fr:"jambe",tah:"ʻāvae",theme:"Corps"},{id:33,fr:"bras",tah:"rima",theme:"Corps"},{id:34,fr:"visage",tah:"aro",theme:"Corps"},{id:35,fr:"main",tah:"ʻapu rima",theme:"Corps"},{id:36,fr:"bouche",tah:"vaha",theme:"Corps"},{id:37,fr:"langue",tah:"arero",theme:"Corps"},{id:38,fr:"dents",tah:"niho",theme:"Corps"},{id:39,fr:"tête",tah:"upoʻo",theme:"Corps"},{id:40,fr:"nez",tah:"ihu",theme:"Corps"},{id:41,fr:"oreille",tah:"taria",theme:"Corps"},{id:42,fr:"cheveux",tah:"rouru",theme:"Corps"},{id:43,fr:"yeux",tah:"mata",theme:"Corps"},{id:44,fr:"pied",tah:"ʻāvae",theme:"Corps"},{id:45,fr:"genou",tah:"turi ʻāvae",theme:"Corps"},{id:46,fr:"épaule",tah:"paʻufifi",theme:"Corps"},{id:47,fr:"cou",tah:"ʻārapoʻa",theme:"Corps"},{id:48,fr:"coude",tah:"poro rima",theme:"Corps"},{id:49,fr:"doigt",tah:"manimani rima",theme:"Corps"},{id:50,fr:"orteil",tah:"manimani ʻāvae",theme:"Corps"},{id:51,fr:"dos",tah:"tuarā",theme:"Corps"},{id:52,fr:"ventre",tah:"ōpū",theme:"Corps"},{id:53,fr:"cœur",tah:"puʻe",theme:"Corps"},{id:54,fr:"sang",tah:"toto",theme:"Corps"},{id:55,fr:"os",tah:"ivi",theme:"Corps"},
+  {id:57,fr:"table",tah:"tēfaʻi",theme:"École"},{id:58,fr:"chaise",tah:"nohoraa",theme:"École"},{id:59,fr:"crayon",tah:"peni",theme:"École"},{id:60,fr:"cahier",tah:"tuhituhiraa",theme:"École"},{id:61,fr:"livre",tah:"puta",theme:"École"},{id:62,fr:"règle",tah:"rūra",theme:"École"},{id:63,fr:"gomme",tah:"horofenua",theme:"École"},{id:65,fr:"tableau",tah:"tāpura",theme:"École"},{id:67,fr:"maître",tah:"feia haʻapiʻi",theme:"École"},{id:69,fr:"élève",tah:"tamariʻi haʻapiʻi",theme:"École"},{id:72,fr:"ciseaux",tah:"sīsō",theme:"École"},{id:73,fr:"colle",tah:"hōpē",theme:"École"},
+  {id:76,fr:"pain",tah:"faraoa",theme:"Nourriture"},{id:77,fr:"eau",tah:"pape",theme:"Nourriture"},{id:79,fr:"banane",tah:"meʻa",theme:"Nourriture"},{id:80,fr:"taro",tah:"taro",theme:"Nourriture"},{id:81,fr:"pomme",tah:"ʻāpara",theme:"Nourriture"},{id:82,fr:"orange",tah:"ʻōrani",theme:"Nourriture"},{id:83,fr:"mangue",tah:"vī",theme:"Nourriture"},{id:84,fr:"noix de coco",tah:"haari",theme:"Nourriture"},{id:85,fr:"papaye",tah:"ʻirita",theme:"Nourriture"},{id:86,fr:"ananas",tah:"painapo",theme:"Nourriture"},{id:87,fr:"citron",tah:"rēmō",theme:"Nourriture"},{id:88,fr:"riz",tah:"raiti",theme:"Nourriture"},{id:90,fr:"poisson (cuisine)",tah:"iʻa",theme:"Nourriture"},{id:91,fr:"sel",tah:"miti",theme:"Nourriture"},{id:93,fr:"œuf",tah:"hūero moa",theme:"Nourriture"},{id:95,fr:"jus",tah:"vai hotu",theme:"Nourriture"},{id:96,fr:"thé",tah:"tī",theme:"Nourriture"},{id:97,fr:"café",tah:"kafe",theme:"Nourriture"},
+  {id:98,fr:"arbre",tah:"tumu rāʻau",theme:"Nature"},{id:99,fr:"fleur",tah:"tiare",theme:"Nature"},{id:100,fr:"mer",tah:"moana",theme:"Nature"},{id:101,fr:"lagon",tah:"ō",theme:"Nature"},{id:102,fr:"montagne",tah:"mauʻa",theme:"Nature"},{id:103,fr:"rivière",tah:"pape hūra",theme:"Nature"},{id:104,fr:"plage",tah:"one",theme:"Nature"},{id:106,fr:"pierre",tah:"ʻōfai",theme:"Nature"},{id:107,fr:"terre",tah:"fenua",theme:"Nature"},{id:108,fr:"soleil",tah:"rā",theme:"Nature"},{id:109,fr:"lune",tah:"māraʻī",theme:"Nature"},{id:110,fr:"étoile",tah:"fetia",theme:"Nature"},{id:111,fr:"ciel",tah:"raʻi",theme:"Nature"},{id:112,fr:"nuage",tah:"aoʻa",theme:"Nature"},{id:113,fr:"pluie",tah:"ua",theme:"Nature"},{id:114,fr:"vent",tah:"māta'i",theme:"Nature"},{id:115,fr:"arc-en-ciel",tah:"ānuanua",theme:"Nature"},{id:116,fr:"feuille",tah:"rau",theme:"Nature"},{id:117,fr:"racine",tah:"aʻa",theme:"Nature"},{id:118,fr:"fruit",tah:"hotu",theme:"Nature"},{id:119,fr:"île",tah:"motu",theme:"Nature"},
+  {id:121,fr:"un",tah:"hōʻē",theme:"Nombres"},{id:122,fr:"deux",tah:"piti",theme:"Nombres"},{id:123,fr:"trois",tah:"toru",theme:"Nombres"},{id:124,fr:"quatre",tah:"maha",theme:"Nombres"},{id:125,fr:"cinq",tah:"pae",theme:"Nombres"},{id:126,fr:"six",tah:"ono",theme:"Nombres"},{id:127,fr:"sept",tah:"hitu",theme:"Nombres"},{id:128,fr:"huit",tah:"vaʻu",theme:"Nombres"},{id:129,fr:"neuf",tah:"iva",theme:"Nombres"},{id:130,fr:"dix",tah:"hōʻē ʻahuru",theme:"Nombres"},{id:131,fr:"vingt",tah:"piti ʻahuru",theme:"Nombres"},{id:132,fr:"cent",tah:"hānere",theme:"Nombres"},{id:133,fr:"mille",tah:"tausani",theme:"Nombres"},
+  {id:134,fr:"rouge",tah:"ʻūteʻute",theme:"Couleurs"},{id:135,fr:"bleu",tah:"ninamu",theme:"Couleurs"},{id:136,fr:"vert",tah:"totoro",theme:"Couleurs"},{id:137,fr:"jaune",tah:"reʻareʻa",theme:"Couleurs"},{id:138,fr:"blanc",tah:"ʻōreʻore",theme:"Couleurs"},{id:139,fr:"noir",tah:"ʻēteʻete",theme:"Couleurs"},{id:140,fr:"rose",tah:"ʻūteʻute māmā",theme:"Couleurs"},
+  {id:143,fr:"père",tah:"metua tāne",theme:"Famille"},{id:144,fr:"mère",tah:"metua vahine",theme:"Famille"},{id:145,fr:"enfant",tah:"tamaiti",theme:"Famille"},{id:146,fr:"frère",tah:"taeʻa tāne",theme:"Famille"},{id:147,fr:"sœur",tah:"taeʻa vahine",theme:"Famille"},{id:148,fr:"grand-père",tah:"tūhine tāne",theme:"Famille"},{id:149,fr:"grand-mère",tah:"tūhine vahine",theme:"Famille"},{id:152,fr:"bébé",tah:"pēpē",theme:"Famille"},{id:153,fr:"homme",tah:"tāne",theme:"Famille"},{id:154,fr:"femme",tah:"vahine",theme:"Famille"},
+  {id:155,fr:"content",tah:"hinaaro",theme:"Émotions"},{id:156,fr:"triste",tah:"haʻamā",theme:"Émotions"},{id:157,fr:"en colère",tah:"riri",theme:"Émotions"},{id:158,fr:"peur",tah:"riʻariʻa",theme:"Émotions"},{id:159,fr:"fatigué",tah:"māʻui",theme:"Émotions"},{id:161,fr:"amour",tah:"hinaʻaro",theme:"Émotions"},
+  {id:163,fr:"lundi",tah:"Monirē",theme:"Jours"},{id:164,fr:"mardi",tah:"Māhana piti",theme:"Jours"},{id:165,fr:"mercredi",tah:"Māhana toru",theme:"Jours"},{id:166,fr:"jeudi",tah:"Māhana maha",theme:"Jours"},{id:167,fr:"vendredi",tah:"Māhana pae",theme:"Jours"},{id:168,fr:"samedi",tah:"Māhana māʻa",theme:"Jours"},{id:169,fr:"dimanche",tah:"Māhana tapu",theme:"Jours"},{id:170,fr:"aujourd'hui",tah:"i teie mahana",theme:"Jours"},{id:171,fr:"demain",tah:"aporoa",theme:"Jours"},{id:172,fr:"hier",tah:"inanahi",theme:"Jours"},
+  {id:173,fr:"maison",tah:"fare",theme:"Maison"},{id:175,fr:"fenêtre",tah:"fānetira",theme:"Maison"},{id:178,fr:"lit",tah:"moeʻa",theme:"Maison"},{id:180,fr:"assiette",tah:"pērōta",theme:"Maison"},{id:181,fr:"verre",tah:"tīāra",theme:"Maison"},{id:183,fr:"couteau",tah:"pahi",theme:"Maison"},{id:184,fr:"cuillère",tah:"māriʻi",theme:"Maison"},{id:185,fr:"montre",tah:"uāti",theme:"Maison"},
+  {id:200,fr:"bonjour",tah:"ia ora na",theme:"Salutations"},{id:202,fr:"au revoir",tah:"nānā",theme:"Salutations"},{id:203,fr:"merci",tah:"māuruuru",theme:"Salutations"},{id:205,fr:"oui",tah:"ʻōe",theme:"Salutations"},{id:206,fr:"non",tah:"ʻaita",theme:"Salutations"},
+  {id:209,fr:"manger",tah:"tāmāʻa",theme:"Actions"},{id:210,fr:"boire",tah:"inu",theme:"Actions"},{id:211,fr:"dormir",tah:"moe",theme:"Actions"},{id:212,fr:"marcher",tah:"haere",theme:"Actions"},{id:213,fr:"courir",tah:"horo",theme:"Actions"},{id:214,fr:"jouer",tah:"taʻa",theme:"Actions"},{id:215,fr:"lire",tah:"haapii",theme:"Actions"},{id:216,fr:"écrire",tah:"tuhituhi",theme:"Actions"},{id:217,fr:"chanter",tah:"himene",theme:"Actions"},{id:218,fr:"danser",tah:"ori",theme:"Actions"},{id:219,fr:"nager",tah:"āuʻe",theme:"Actions"},{id:220,fr:"regarder",tah:"hiʻo",theme:"Actions"},{id:222,fr:"parler",tah:"parau",theme:"Actions"},{id:226,fr:"donner",tah:"hōroʻa",theme:"Actions"},{id:227,fr:"prendre",tah:"rave",theme:"Actions"},{id:228,fr:"venir",tah:"haere mai",theme:"Actions"},{id:229,fr:"partir",tah:"haere atu",theme:"Actions"},
+  {id:230,fr:"moi",tah:"au",theme:"Pronoms"},{id:231,fr:"toi",tah:"oe",theme:"Pronoms"},{id:232,fr:"lui / elle",tah:"oia",theme:"Pronoms"},{id:233,fr:"nous (deux)",tah:"tāua",theme:"Pronoms"},{id:234,fr:"nous (plusieurs)",tah:"tātou",theme:"Pronoms"},
+  {id:237,fr:"pirogue",tah:"vaʻa",theme:"Polynésie"},{id:238,fr:"tiare Tahiti",tah:"tiare Tahiti",theme:"Polynésie"},{id:241,fr:"heiva",tah:"Heiva",theme:"Polynésie"},{id:242,fr:"himene",tah:"himene",theme:"Polynésie"},{id:244,fr:"pāreu",tah:"pāreu",theme:"Polynésie"},{id:245,fr:"tatouage",tah:"tātau",theme:"Polynésie"},{id:246,fr:"fenua",tah:"fenua",theme:"Polynésie"},{id:247,fr:"marae",tah:"marae",theme:"Polynésie"},
+  {id:267,fr:"matin",tah:"ao atea",theme:"Temps"},{id:268,fr:"midi",tah:"avatea",theme:"Temps"},{id:269,fr:"soir",tah:"ahiahi",theme:"Temps"},{id:270,fr:"nuit",tah:"pō",theme:"Temps"},{id:271,fr:"année",tah:"matahiti",theme:"Temps"},{id:272,fr:"mois",tah:"māvaʻa",theme:"Temps"},{id:273,fr:"semaine",tah:"hepetoma",theme:"Temps"},{id:274,fr:"heure",tah:"hora",theme:"Temps"}
+];
+
+// ============================================================
+// ÉTAT
+// ============================================================
+let direction = 'fr-to-tah'; // fr-to-tah | tah-to-fr
+let themeActif = null;
+let expertUnlocked = false;
+let expertTabActif = 'corrections';
+
+const MOT_DE_PASSE = 'farevanaa';
+
+// Chargement depuis localStorage
+let corrections = JSON.parse(localStorage.getItem('tahuri_corrections') || '[]');
+let regles = JSON.parse(localStorage.getItem('tahuri_regles') || '[]');
+let glossaire = JSON.parse(localStorage.getItem('tahuri_glossaire') || '[]');
+let historique = JSON.parse(localStorage.getItem('tahuri_historique') || '[]');
+let apiKey = localStorage.getItem('tahuri_api_key') || '';
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showTab(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'lexique') renderLexique();
+  if (name === 'historique') renderHistorique();
+  if (name === 'expert') renderExpert();
+}
+
+// ============================================================
+// API KEY
+// ============================================================
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) return;
+  apiKey = val;
+  localStorage.setItem('tahuri_api_key', val);
+  document.getElementById('api-config-banner').style.display = 'none';
+}
+
+function checkApiBanner() {
+  if (apiKey) document.getElementById('api-config-banner').style.display = 'none';
+}
+
+// ============================================================
+// CLAVIER VIRTUEL
+// ============================================================
+function insertEta() {
+  const ta = document.getElementById('input-text');
+  const s = ta.selectionStart, e = ta.selectionEnd;
+  ta.value = ta.value.slice(0,s) + 'ʻ' + ta.value.slice(e);
+  ta.selectionStart = ta.selectionEnd = s + 1;
+  ta.focus();
+}
+
+function applyTarava() {
+  const ta = document.getElementById('input-text');
+  const s = ta.selectionStart;
+  const macrons = {a:'ā',e:'ē',i:'ī',o:'ō',u:'ū',A:'Ā',E:'Ē',I:'Ī',O:'Ō',U:'Ū'};
+  let pos = s - 1;
+  while (pos >= 0 && !macrons[ta.value[pos]]) pos--;
+  if (pos >= 0 && macrons[ta.value[pos]]) {
+    const v = ta.value[pos];
+    ta.value = ta.value.slice(0, pos) + macrons[v] + ta.value.slice(pos + 1);
+    ta.selectionStart = ta.selectionEnd = s;
+  }
+  ta.focus();
+}
+
+function swapDirection() {
+  direction = direction === 'fr-to-tah' ? 'tah-to-fr' : 'fr-to-tah';
+  document.getElementById('label-src').textContent = direction === 'fr-to-tah' ? '🇫🇷 Français' : '🌺 Reo Tahiti';
+  document.getElementById('label-tgt').textContent = direction === 'fr-to-tah' ? '🌺 Reo Tahiti' : '🇫🇷 Français';
+  document.getElementById('label-src').classList.toggle('active', true);
+  document.getElementById('input-text').placeholder = direction === 'fr-to-tah' ? 'Entrez le texte en français…' : 'Tapez en reo Tahiti…';
+  document.getElementById('result-zone').innerHTML = '';
+}
+
+function onInput() {}
+
+function handleKeydown(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); traduire(); }
+}
+
+// ============================================================
+// TRADUCTION
+// ============================================================
+function buildSystemPrompt() {
+  let prompt = `Tu es Tāhuri, un assistant expert en traduction entre le français et le reo Tahiti (tahitien). Tu appliques strictement les normes orthographiques de la Fare Vānaʻa (Académie tahitienne) : le coup de glotte s'écrit ʻeta (U+02BB : ʻ) et jamais avec une apostrophe ordinaire ; les voyelles longues portent un tārava (macron : ā ē ī ō ū). La langue source et cible est exclusivement le reo Tahiti — jamais le hawaiien, le māori, le samoan ou toute autre langue polynésienne. La syntaxe du reo Tahiti est de type VSO (Verbe–Sujet–Objet). Tu maîtrises les particules grammaticales (e, ua, te, i, o, a, no, na, etc.), les marqueurs aspectuels, et les registres formel/informel.
+
+Réponds UNIQUEMENT en JSON valide avec cette structure :
+{
+  "traduction": "traduction principale",
+  "variantes": ["variante 1", "variante 2"] ou [],
+  "analyse": "analyse grammaticale brève ou null",
+  "note": "note culturelle ou null",
+  "exemple": "exemple d'usage ou null"
+}
+
+Ne fournis que les informations dont tu es certain. Mets null si tu n'es pas sûr. N'invente pas de mots.`;
+
+  if (glossaire.length > 0) {
+    prompt += '\n\nGLOSSAIRE PRIORITAIRE (appliquer impérativement) :\n';
+    glossaire.forEach(g => { prompt += `- ${g.fr} = ${g.tah}${g.note ? ` (${g.note})` : ''}\n`; });
+  }
+  if (corrections.length > 0) {
+    prompt += '\n\nCORRECTIONS EXPERTES (référence contextuelle) :\n';
+    corrections.forEach(c => { prompt += `- "${c.wrong}" → "${c.correct}"${c.note ? ` (${c.note})` : ''}\n`; });
+  }
+  if (regles.length > 0) {
+    prompt += '\n\nRÈGLES EXPERTES :\n';
+    regles.forEach(r => { prompt += `- ${r.texte}\n`; });
+  }
+
+  return prompt;
+}
+
+async function traduire() {
+  const texte = document.getElementById('input-text').value.trim();
+  if (!texte) return;
+
+  if (!apiKey) {
+    document.getElementById('api-config-banner').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('btn-traduire');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Traduction en cours…';
+  document.getElementById('result-zone').innerHTML = '';
+
+  const sens = direction === 'fr-to-tah' ? 'français vers reo Tahiti' : 'reo Tahiti vers français';
+  const userMsg = `Traduis ce texte du ${sens} : "${texte}"`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: buildSystemPrompt(),
+        messages: [{ role: 'user', content: userMsg }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || `Erreur API ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const raw = data.content[0].text;
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    afficherResultat(texte, result);
+    sauvegarderHistorique(texte, result.traduction);
+
+  } catch(e) {
+    document.getElementById('result-zone').innerHTML =
+      `<div class="erreur">⚠️ ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Traduire';
+  }
+}
+
+function afficherResultat(input, r) {
+  let html = `<div class="card result-card"><div class="card-body">`;
+  html += `<div class="result-main">${r.traduction}</div>`;
+
+  if (r.variantes && r.variantes.length > 0) {
+    html += `<div class="result-section"><div class="result-label">Variantes</div><div class="result-text">${r.variantes.join(' • ')}</div></div>`;
+  }
+  if (r.analyse) {
+    html += `<div class="result-section collapsible" onclick="this.classList.toggle('closed')"><div class="result-label">Analyse grammaticale</div><div class="result-content result-text">${r.analyse}</div></div>`;
+  }
+  if (r.note) {
+    html += `<div class="result-section collapsible" onclick="this.classList.toggle('closed')"><div class="result-label">Note culturelle</div><div class="result-content result-text">${r.note}</div></div>`;
+  }
+  if (r.exemple) {
+    html += `<div class="result-section"><div class="result-label">Exemple d'usage</div><div class="result-text" style="font-style:italic">${r.exemple}</div></div>`;
+  }
+
+  html += `</div></div>`;
+  document.getElementById('result-zone').innerHTML = html;
+}
+
+// ============================================================
+// HISTORIQUE
+// ============================================================
+function sauvegarderHistorique(input, output) {
+  historique.unshift({ input, output, date: new Date().toLocaleDateString('fr-FR'), dir: direction });
+  if (historique.length > 30) historique.pop();
+  localStorage.setItem('tahuri_historique', JSON.stringify(historique));
+}
+
+function renderHistorique() {
+  const el = document.getElementById('historique-list');
+  if (historique.length === 0) { el.innerHTML = '<div class="empty">Aucune traduction pour l\'instant</div>'; return; }
+  el.innerHTML = historique.map((h,i) => `
+    <div class="historique-item" onclick="chargerHistorique(${i})">
+      <div class="hist-input">${h.input}</div>
+      <div class="hist-output">${h.output}</div>
+      <div class="hist-meta">${h.date} • ${h.dir === 'fr-to-tah' ? 'FR → TAH' : 'TAH → FR'}</div>
+    </div>`).join('');
+}
+
+function chargerHistorique(i) {
+  const h = historique[i];
+  direction = h.dir;
+  document.getElementById('input-text').value = h.input;
+  showTab('traduire');
+  document.querySelector('.tab').click();
+}
+
+function clearHistorique() {
+  if (!confirm('Effacer tout l\'historique ?')) return;
+  historique = [];
+  localStorage.removeItem('tahuri_historique');
+  renderHistorique();
+}
+
+// ============================================================
+// LEXIQUE
+// ============================================================
+const themes = [...new Set(LEXIQUE.map(e => e.theme))].sort();
+
+function renderLexique() {
+  // Chips thèmes
+  const chips = document.getElementById('theme-chips');
+  chips.innerHTML = '<button class="chip' + (!themeActif ? ' active' : '') + '" onclick="filtrerTheme(null)">Tous</button>' +
+    themes.map(t => `<button class="chip${themeActif===t?' active':''}" onclick="filtrerTheme('${t}')">${t}</button>`).join('');
+  filtrerLexique();
+}
+
+function filtrerTheme(t) {
+  themeActif = t;
+  renderLexique();
+}
+
+function filtrerLexique() {
+  const q = (document.getElementById('lex-search')?.value || '').toLowerCase().trim();
+  let results = LEXIQUE.filter(e => {
+    const matchTheme = !themeActif || e.theme === themeActif;
+    const matchSearch = !q || e.fr.toLowerCase().includes(q) || e.tah.toLowerCase().includes(q);
+    return matchTheme && matchSearch;
+  });
+
+  const el = document.getElementById('lex-results');
+  if (results.length === 0) { el.innerHTML = '<div class="empty">Aucun résultat</div>'; return; }
+  el.innerHTML = results.map(e => `
+    <div class="lex-item" onclick="chargerLexique('${e.fr}')">
+      <div>
+        <div class="lex-fr">${e.fr}</div>
+        <div class="lex-tah">${e.tah}</div>
+      </div>
+      <span class="lex-theme">${e.theme}</span>
+    </div>`).join('');
+}
+
+function chargerLexique(fr) {
+  direction = 'fr-to-tah';
+  document.getElementById('input-text').value = fr;
+  document.querySelectorAll('.tab')[0].click();
+  showTabDirect('traduire');
+}
+
+function showTabDirect(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.tab')[0].classList.add('active');
+}
+
+// ============================================================
+// EXPERT
+// ============================================================
+function checkPassword() {
+  const pwd = document.getElementById('pwd-input').value;
+  if (pwd === MOT_DE_PASSE) {
+    expertUnlocked = true;
+    document.getElementById('expert-locked').style.display = 'none';
+    document.getElementById('expert-unlocked').style.display = 'block';
+    renderExpert();
+  } else {
+    document.getElementById('pwd-error').textContent = 'Mot de passe incorrect';
+  }
+}
+
+function lockExpert() {
+  expertUnlocked = false;
+  document.getElementById('expert-locked').style.display = 'block';
+  document.getElementById('expert-unlocked').style.display = 'none';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('pwd-error').textContent = '';
+}
+
+function showExpertTab(tab) {
+  expertTabActif = tab;
+  document.querySelectorAll('.expert-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  ['corrections','regles','glossaire'].forEach(t => {
+    document.getElementById('etab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  renderExpert();
+}
+
+function renderExpert() {
+  if (!expertUnlocked) return;
+  renderCorrections();
+  renderRegles();
+  renderGlossaire();
+}
+
+// CORRECTIONS
+function addCorrection() {
+  const wrong = document.getElementById('c-wrong').value.trim();
+  const correct = document.getElementById('c-correct').value.trim();
+  const note = document.getElementById('c-note').value.trim();
+  if (!wrong || !correct) return;
+  corrections.push({ id: Date.now(), wrong, correct, note });
+  localStorage.setItem('tahuri_corrections', JSON.stringify(corrections));
+  document.getElementById('c-wrong').value = '';
+  document.getElementById('c-correct').value = '';
+  document.getElementById('c-note').value = '';
+  renderCorrections();
+}
+
+function removeCorrection(id) {
+  corrections = corrections.filter(c => c.id !== id);
+  localStorage.setItem('tahuri_corrections', JSON.stringify(corrections));
+  renderCorrections();
+}
+
+function renderCorrections() {
+  const el = document.getElementById('corrections-list');
+  if (!el) return;
+  if (corrections.length === 0) { el.innerHTML = '<div class="empty">Aucune correction</div>'; return; }
+  el.innerHTML = corrections.map(c => `
+    <div class="entry-item">
+      <div class="entry-content">
+        <div class="entry-main">❌ "${c.wrong}" → ✅ "${c.correct}"</div>
+        ${c.note ? `<div class="entry-note">${c.note}</div>` : ''}
+      </div>
+      <button class="btn-sm danger" onclick="removeCorrection(${c.id})">✕</button>
+    </div>`).join('');
+}
+
+// RÈGLES
+function addRegle() {
+  const texte = document.getElementById('r-texte').value.trim();
+  if (!texte) return;
+  regles.push({ id: Date.now(), texte });
+  localStorage.setItem('tahuri_regles', JSON.stringify(regles));
+  document.getElementById('r-texte').value = '';
+  renderRegles();
+}
+
+function removeRegle(id) {
+  regles = regles.filter(r => r.id !== id);
+  localStorage.setItem('tahuri_regles', JSON.stringify(regles));
+  renderRegles();
+}
+
+function renderRegles() {
+  const el = document.getElementById('regles-list');
+  if (!el) return;
+  if (regles.length === 0) { el.innerHTML = '<div class="empty">Aucune règle</div>'; return; }
+  el.innerHTML = regles.map(r => `
+    <div class="entry-item">
+      <div class="entry-content"><div class="entry-main">${r.texte}</div></div>
+      <button class="btn-sm danger" onclick="removeRegle(${r.id})">✕</button>
+    </div>`).join('');
+}
+
+// GLOSSAIRE
+function addGlossaire() {
+  const fr = document.getElementById('g-fr').value.trim();
+  const tah = document.getElementById('g-tah').value.trim();
+  const note = document.getElementById('g-note').value.trim();
+  if (!fr || !tah) return;
+  glossaire.push({ id: Date.now(), fr, tah, note });
+  localStorage.setItem('tahuri_glossaire', JSON.stringify(glossaire));
+  document.getElementById('g-fr').value = '';
+  document.getElementById('g-tah').value = '';
+  document.getElementById('g-note').value = '';
+  renderGlossaire();
+}
+
+function removeGlossaire(id) {
+  glossaire = glossaire.filter(g => g.id !== id);
+  localStorage.setItem('tahuri_glossaire', JSON.stringify(glossaire));
+  renderGlossaire();
+}
+
+function renderGlossaire() {
+  const el = document.getElementById('glossaire-list');
+  if (!el) return;
+  if (glossaire.length === 0) { el.innerHTML = '<div class="empty">Aucune entrée</div>'; return; }
+  el.innerHTML = glossaire.map(g => `
+    <div class="entry-item">
+      <div class="entry-content">
+        <div class="entry-main">${g.fr} = ${g.tah}</div>
+        ${g.note ? `<div class="entry-note">${g.note}</div>` : ''}
+      </div>
+      <button class="btn-sm danger" onclick="removeGlossaire(${g.id})">✕</button>
+    </div>`).join('');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+checkApiBanner();
+</script>
+</body>
+</html>
