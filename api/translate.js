@@ -18,6 +18,15 @@ const FORMAT = `
 - Toujours fournir la tournure négative.
 - Analyse : 1-2 lignes max.
 
+## RÈGLE ABSOLUE — ATTRIBUT ADJECTIVAL
+"Le/La + nom + est + adjectif" = TOUJOURS E mea + adjectif + te + nom.
+JAMAIS E + nom + adjectif + teie pour cette structure.
+Exemples corrects :
+- "La maison est rouge" → E mea 'ute'ute te fare. (PAS E fare 'ute'ute teie)
+- "Le chien est blanc" → E mea 'ōre'ore te 'ūrī. (PAS E 'ūrī 'ōre'ore teie)
+- "La mer est bleue" → E mea nīnamu te miti. (PAS E miti nīnamu teie)
+RAPPEL : E + nom + adjectif + teie = "C'est un/une + nom + adjectif" — structure DIFFÉRENTE du "le/la + nom + est + adjectif".
+
 ## FORMAT DE RÉPONSE OBLIGATOIRE
 JSON valide uniquement, sans markdown, sans backticks :
 {
