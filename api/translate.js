@@ -11,12 +11,26 @@ try {
 }
 
 const FORMAT = `
-## RÈGLES CRITIQUES
-- Présent français ambigu : traduire par inaccompli E + V + S, puis dans si_tu_veux_dire proposer la forme progressive Tē + V + nei + S.
+## RÈGLES CRITIQUES — PRÉSENT FRANÇAIS
+Le présent français est fondamentalement ambigu. Deux lectures possibles :
+1. Action non encore accomplie, habituelle ou imminente → E + V + S (inaccompli)
+2. Action en cours au moment de parler → Tē + V + nei/ra + S (progressif)
+
+Règle de décision :
+- Si la phrase contient un marqueur de contexte clair (maintenant, en ce moment, là, tous les jours, demain) → choisir l'aspect correspondant sans ambiguïté.
+- Si aucun contexte ne permet de trancher → proposer les DEUX formes dans "traduction" et "si_tu_veux_dire" :
+  * E + V + S = action non encore faite / habitude / imminence
+  * Tē + V + nei/ra + S = action en cours au moment de parler
+
+Règle nei/ra :
+- Tē + V + nei + au = progressif 1ère personne singulier (usage établi avec au)
+- Tē + V + ra + S = progressif tous les autres sujets (usage dominant)
+- na (2ème personne) existe mais est rare — ne proposer que si contexte explicite.
 - E + V + nei = FAUTE GRAVE — ne jamais produire.
-- Tē + V + nei/na/ra = progressif UNIQUEMENT.
-- Toujours fournir la tournure négative.
-- Analyse : 1-2 lignes max.
+
+## LEXIQUE SUPPLÉMENTAIRE VALIDÉ
+- chocolat = tōtōrā
+- étoile = fetiʻa (avec ʻeta — ne jamais écrire fetia sans ʻeta)
 
 ## RÈGLE ABSOLUE — ATTRIBUT ADJECTIVAL
 "Le/La + nom + est + adjectif" = TOUJOURS E mea + adjectif + te + nom.
