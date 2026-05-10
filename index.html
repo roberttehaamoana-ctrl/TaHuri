@@ -527,6 +527,7 @@
   <button class="tab active" id="tab-traduire" onclick="showTab('traduire')">🌺 Traduire</button>
   <button class="tab" id="tab-lexique" onclick="showTab('lexique')">📖 Lexique</button>
   <button class="tab" id="tab-exercices" onclick="showTab('exercices')">✏️ Exercices</button>
+  <button class="tab" id="tab-historique" onclick="showTab('historique')">🕐 Historique</button>
   <button class="tab" id="tab-expert" onclick="showTab('expert')">⚙️ Expert</button>
 </div>
 
@@ -825,6 +826,7 @@ function showTab(name) {
   document.getElementById('screen-' + name).classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
   if (name === 'lexique') renderLexique();
+  if (name === 'historique') renderHistorique();
   if (name === 'expert') renderExpert();
 }
 
