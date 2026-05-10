@@ -531,11 +531,49 @@
 
   <!-- ===== LEXIQUE ===== -->
   <div id="screen-lexique" class="screen">
-    <div class="card">
-      <div class="card-body">
-        <input class="search-input" id="lex-search" placeholder="Rechercher en français ou en reo Tahiti…" oninput="filtrerLexique()">
-        <div class="theme-chips" id="theme-chips"></div>
-        <div id="lex-results"></div>
+    <div id="lexique-normal">
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input class="search-input" id="lex-search" placeholder="Rechercher en français ou en reo Tahiti…" oninput="filtrerLexique()" style="margin-bottom:0; flex:1;">
+            <button class="btn-sm" onclick="demarrerFlashcards()" style="flex-shrink:0; white-space:nowrap;">🃏 Flashcards</button>
+          </div>
+          <div class="theme-chips" id="theme-chips"></div>
+          <div id="lex-results"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="lexique-flashcard" style="display:none;">
+      <div class="card">
+        <div class="card-body" style="text-align:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <button class="btn-sm secondary" onclick="quitterFlashcards()">← Lexique</button>
+            <span id="fc-score" style="font-size:0.85rem; font-weight:600; color:var(--texte-doux);">0 / 0</span>
+            <button class="btn-sm secondary" onclick="changerDirectionFC()">🔄 <span id="fc-dir">FR → TAH</span></button>
+          </div>
+          <div id="fc-progress" style="height:4px; background:var(--sable-dark); border-radius:2px; margin-bottom:20px;">
+            <div id="fc-progress-bar" style="height:100%; background:var(--lagon); border-radius:2px; width:0%; transition:width 0.3s;"></div>
+          </div>
+          <div id="fc-card" style="min-height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background:var(--sable); border-radius:14px; margin-bottom:16px; cursor:pointer;" onclick="revelerFC()">
+            <div id="fc-question" style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--lagon);"></div>
+            <div id="fc-theme-badge" style="font-size:0.72rem; color:#bbb; margin-top:8px;"></div>
+            <div id="fc-reponse" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid var(--sable-dark); width:100%;">
+              <div id="fc-reponse-texte" style="font-size:1.3rem; font-weight:600; color:var(--or);"></div>
+            </div>
+            <div id="fc-tap-hint" style="font-size:0.75rem; color:#bbb; margin-top:12px;">Appuyer pour révéler</div>
+          </div>
+          <div id="fc-boutons" style="display:none; gap:12px; justify-content:center;">
+            <button class="btn-sm danger" onclick="reponseFC(false)" style="flex:1; padding:12px;">✗ Raté</button>
+            <button class="btn-sm" onclick="reponseFC(true)" style="flex:1; padding:12px; background:var(--succes);">✓ Réussi</button>
+          </div>
+          <div id="fc-fin" style="display:none; text-align:center; padding:20px;">
+            <div style="font-size:2rem; margin-bottom:8px;">🌺</div>
+            <div id="fc-fin-score" style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--lagon); margin-bottom:8px;"></div>
+            <div id="fc-fin-message" style="font-size:0.9rem; color:var(--texte-doux); margin-bottom:16px;"></div>
+            <button class="btn-traduire" onclick="relancerFlashcards()">Recommencer</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1088,6 +1126,110 @@ function renderGlossaire() {
       </div>
       <button class="btn-sm danger" onclick="removeGlossaire(${g.id})">✕</button>
     </div>`).join('');
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+let fcDeck = [];
+let fcIndex = 0;
+let fcReussis = 0;
+let fcRates = 0;
+let fcRevele = false;
+let fcDirection = 'fr-to-tah'; // fr-to-tah | tah-to-fr
+
+function demarrerFlashcards() {
+  // Prendre le lexique filtré ou tout le lexique
+  const q = (document.getElementById('lex-search')?.value || '').toLowerCase().trim();
+  let pool = LEXIQUE.filter(e => {
+    const matchTheme = !themeActif || e.theme === themeActif;
+    const matchSearch = !q || e.fr.toLowerCase().includes(q) || e.tah.toLowerCase().includes(q);
+    return matchTheme && matchSearch;
+  });
+
+  if (pool.length < 2) {
+    alert('Pas assez de mots pour une session. Sélectionnez un thème plus large.');
+    return;
+  }
+
+  // Mélanger
+  fcDeck = pool.sort(() => Math.random() - 0.5);
+  fcIndex = 0; fcReussis = 0; fcRates = 0; fcRevele = false;
+
+  document.getElementById('lexique-normal').style.display = 'none';
+  document.getElementById('lexique-flashcard').style.display = 'block';
+  document.getElementById('fc-fin').style.display = 'none';
+  afficherCarteFC();
+}
+
+function afficherCarteFC() {
+  if (fcIndex >= fcDeck.length) {
+    terminerFlashcards(); return;
+  }
+  const carte = fcDeck[fcIndex];
+  fcRevele = false;
+
+  const question = fcDirection === 'fr-to-tah' ? carte.fr : carte.tah;
+  const reponse = fcDirection === 'fr-to-tah' ? carte.tah : carte.fr;
+
+  document.getElementById('fc-question').textContent = question;
+  document.getElementById('fc-theme-badge').textContent = carte.theme;
+  document.getElementById('fc-reponse-texte').textContent = reponse;
+  document.getElementById('fc-reponse').style.display = 'none';
+  document.getElementById('fc-tap-hint').style.display = 'block';
+  document.getElementById('fc-boutons').style.display = 'none';
+
+  const total = fcDeck.length;
+  document.getElementById('fc-score').textContent = `${fcReussis} ✓ / ${fcRates} ✗`;
+  document.getElementById('fc-progress-bar').style.width = `${(fcIndex / total) * 100}%`;
+}
+
+function revelerFC() {
+  if (fcRevele) return;
+  fcRevele = true;
+  document.getElementById('fc-reponse').style.display = 'block';
+  document.getElementById('fc-tap-hint').style.display = 'none';
+  document.getElementById('fc-boutons').style.display = 'flex';
+}
+
+function reponseFC(reussi) {
+  if (reussi) fcReussis++; else fcRates++;
+  fcIndex++;
+  afficherCarteFC();
+}
+
+function terminerFlashcards() {
+  const total = fcReussis + fcRates;
+  const pct = Math.round((fcReussis / total) * 100);
+  document.getElementById('fc-card').style.display = 'none';
+  document.getElementById('fc-boutons').style.display = 'none';
+  document.getElementById('fc-fin').style.display = 'block';
+  document.getElementById('fc-fin-score').textContent = `${fcReussis} / ${total} — ${pct}%`;
+  document.getElementById('fc-fin-message').textContent =
+    pct === 100 ? 'Maita\'i roa ! Parfait !' :
+    pct >= 70 ? 'Maita\'i ! Très bien !' :
+    pct >= 50 ? 'Pas mal, continue !' :
+    'Encore un effort, tu vas y arriver !';
+  document.getElementById('fc-progress-bar').style.width = '100%';
+}
+
+function relancerFlashcards() {
+  document.getElementById('fc-card').style.display = 'flex';
+  demarrerFlashcards();
+}
+
+function quitterFlashcards() {
+  document.getElementById('lexique-normal').style.display = 'block';
+  document.getElementById('lexique-flashcard').style.display = 'none';
+  document.getElementById('fc-card').style.display = 'flex';
+}
+
+function changerDirectionFC() {
+  fcDirection = fcDirection === 'fr-to-tah' ? 'tah-to-fr' : 'fr-to-tah';
+  document.getElementById('fc-dir').textContent = fcDirection === 'fr-to-tah' ? 'FR → TAH' : 'TAH → FR';
+  fcIndex = 0; fcReussis = 0; fcRates = 0;
+  fcDeck = fcDeck.sort(() => Math.random() - 0.5);
+  afficherCarteFC();
 }
 
 // ============================================================
