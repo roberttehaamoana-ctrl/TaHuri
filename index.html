@@ -555,17 +555,15 @@
           <div id="fc-progress" style="height:4px; background:var(--sable-dark); border-radius:2px; margin-bottom:20px;">
             <div id="fc-progress-bar" style="height:100%; background:var(--lagon); border-radius:2px; width:0%; transition:width 0.3s;"></div>
           </div>
-          <div id="fc-card" style="min-height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background:var(--sable); border-radius:14px; margin-bottom:16px; cursor:pointer;" onclick="revelerFC()">
-            <div id="fc-question" style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--lagon);"></div>
-            <div id="fc-theme-badge" style="font-size:0.72rem; color:#bbb; margin-top:8px;"></div>
-            <div id="fc-reponse" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid var(--sable-dark); width:100%;">
-              <div id="fc-reponse-texte" style="font-size:1.3rem; font-weight:600; color:var(--or);"></div>
-            </div>
-            <div id="fc-tap-hint" style="font-size:0.75rem; color:#bbb; margin-top:12px;">Appuyer pour révéler</div>
+          <div id="fc-card" style="min-height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background:var(--sable); border-radius:14px; margin-bottom:16px;">
+            <div id="fc-question" style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--lagon); text-align:center;"></div>
+            <div style="font-size:1.2rem; color:#bbb; margin:8px 0;">—</div>
+            <div id="fc-reponse-texte" style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--or); text-align:center;"></div>
+            <div id="fc-theme-badge" style="font-size:0.72rem; color:#bbb; margin-top:10px;"></div>
           </div>
-          <div id="fc-boutons" style="display:none; gap:12px; justify-content:center;">
-            <button class="btn-sm danger" onclick="reponseFC(false)" style="flex:1; padding:12px;">✗ Raté</button>
-            <button class="btn-sm" onclick="reponseFC(true)" style="flex:1; padding:12px; background:var(--succes);">✓ Réussi</button>
+          <div id="fc-boutons" style="display:flex; gap:12px; justify-content:center;">
+            <button class="btn-sm danger" onclick="reponseFC(false)" style="flex:1; padding:12px;">✗ Non</button>
+            <button class="btn-sm" onclick="reponseFC(true)" style="flex:1; padding:12px; background:var(--succes);">✓ Oui</button>
           </div>
           <div id="fc-fin" style="display:none; text-align:center; padding:20px;">
             <div style="font-size:2rem; margin-bottom:8px;">🌺</div>
@@ -1152,8 +1150,8 @@ function demarrerFlashcards() {
     return;
   }
 
-  // Mélanger
-  fcDeck = pool.sort(() => Math.random() - 0.5);
+  // Mélanger et limiter à 5
+  fcDeck = pool.sort(() => Math.random() - 0.5).slice(0, 5);
   fcIndex = 0; fcReussis = 0; fcRates = 0; fcRevele = false;
 
   document.getElementById('lexique-normal').style.display = 'none';
@@ -1167,17 +1165,12 @@ function afficherCarteFC() {
     terminerFlashcards(); return;
   }
   const carte = fcDeck[fcIndex];
-  fcRevele = false;
-
   const question = fcDirection === 'fr-to-tah' ? carte.fr : carte.tah;
   const reponse = fcDirection === 'fr-to-tah' ? carte.tah : carte.fr;
 
   document.getElementById('fc-question').textContent = question;
-  document.getElementById('fc-theme-badge').textContent = carte.theme;
   document.getElementById('fc-reponse-texte').textContent = reponse;
-  document.getElementById('fc-reponse').style.display = 'none';
-  document.getElementById('fc-tap-hint').style.display = 'block';
-  document.getElementById('fc-boutons').style.display = 'none';
+  document.getElementById('fc-theme-badge').textContent = carte.theme;
 
   const total = fcDeck.length;
   document.getElementById('fc-score').textContent = `${fcReussis} ✓ / ${fcRates} ✗`;
