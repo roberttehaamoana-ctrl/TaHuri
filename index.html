@@ -1213,7 +1213,9 @@ function relancerFlashcards() {
   document.getElementById('fc-card').style.display = 'flex';
   document.getElementById('fc-boutons').style.display = 'flex';
   fcIndex = 0; fcReussis = 0; fcRates = 0;
-  fcDeck = fcDeck.sort(() => Math.random() - 0.5);
+  // Repiocher 5 mots aléatoires depuis le lexique complet
+  let pool = LEXIQUE.filter(e => !themeActif || e.theme === themeActif);
+  fcDeck = pool.sort(() => Math.random() - 0.5).slice(0, 5);
   afficherCarteFC();
 }
 
