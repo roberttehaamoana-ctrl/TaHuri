@@ -505,13 +505,6 @@
   <!-- ===== TRADUCTION ===== -->
   <div id="screen-traduire" class="screen active">
 
-    <div class="api-config" id="api-config-banner">
-      <h4>🔑 Clé API Anthropic requise</h4>
-      <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
-      <button class="btn-sm" onclick="saveApiKey()">Enregistrer</button>
-      <p class="api-hint">La clé est stockée localement sur cet appareil uniquement. Obtenez-la sur console.anthropic.com</p>
-    </div>
-
     <div class="card">
       <div class="card-body">
         <div class="direction-bar">
@@ -668,7 +661,7 @@ let corrections = JSON.parse(localStorage.getItem('tahuri_corrections') || '[]')
 let regles = JSON.parse(localStorage.getItem('tahuri_regles') || '[]');
 let glossaire = JSON.parse(localStorage.getItem('tahuri_glossaire') || '[]');
 let historique = JSON.parse(localStorage.getItem('tahuri_historique') || '[]');
-let apiKey = localStorage.getItem('tahuri_api_key') || '';
+// Clé API gérée côté serveur Vercel
 
 // ============================================================
 // NAVIGATION
@@ -686,18 +679,6 @@ function showTab(name) {
 // ============================================================
 // API KEY
 // ============================================================
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val) return;
-  apiKey = val;
-  localStorage.setItem('tahuri_api_key', val);
-  document.getElementById('api-config-banner').style.display = 'none';
-}
-
-function checkApiBanner() {
-  if (apiKey) document.getElementById('api-config-banner').style.display = 'none';
-}
-
 // ============================================================
 // CLAVIER VIRTUEL
 // ============================================================
@@ -774,11 +755,6 @@ Ne fournis que les informations dont tu es certain. Mets null si tu n'es pas sû
 async function traduire() {
   const texte = document.getElementById('input-text').value.trim();
   if (!texte) return;
-
-  if (!apiKey) {
-    document.getElementById('api-config-banner').style.display = 'block';
-    return;
-  }
 
   const btn = document.getElementById('btn-traduire');
   btn.disabled = true;
@@ -1196,7 +1172,6 @@ function dismissInstall() {
 // ============================================================
 // INIT
 // ============================================================
-checkApiBanner();
 afficherPhraseduJour();
 afficherBandeauInstall();
 </script>
