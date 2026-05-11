@@ -85,6 +85,21 @@ export default async function handler(req, res) {
   try {
     const { messages, system_extra } = req.body;
 
+    // Vérifier si les traductions sont activées
+    try {
+      const REDIS_URL = process.env.KV_REST_API_URL;
+      const REDIS_TOKEN = process.env.KV_REST_API_TOKEN;
+      const switchResp = await fetch(`${REDIS_URL}/get/tahuri:traductions_actives`, {
+        headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
+      });
+      const switchData = await switchResp.json();
+      if (switchData.result === 'false') {
+        return res.status(503).json({ error: 'Les traductions sont temporairement désactivées. Le lexique et les exercices restent disponibles.' });
+      }
+    } catch(e) {
+      // Si Upstash non disponible, on laisse passer
+    }
+
     // Charger le glossaire Upstash
     let glossaireUpstash = [];
     try {
