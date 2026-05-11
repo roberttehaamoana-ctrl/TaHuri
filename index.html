@@ -75,16 +75,19 @@
   }
   .tab {
     flex: 1;
-    padding: 13px 8px;
+    padding: 10px 4px;
     background: none;
     border: none;
     color: rgba(255,255,255,0.55);
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    letter-spacing: 0.3px;
+    letter-spacing: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .tab.active {
     color: var(--or);
@@ -447,6 +450,26 @@
     padding: 8px 12px;
     border-radius: 0 8px 8px 0;
   }
+  .ex-sous-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .ex-sous-tab {
+    flex: 1;
+    padding: 10px;
+    background: var(--sable-dark);
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--texte-doux);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .ex-sous-tab.active { background: var(--lagon); color: white; }
+
   .ex-mode-btn {
     background: var(--sable);
     border: 2px solid var(--sable-dark);
@@ -621,24 +644,37 @@
 
     <!-- Accueil exercices -->
     <div id="ex-accueil">
-      <div class="card">
-        <div class="card-header">Choisissez un exercice</div>
-        <div class="card-body">
-          <div class="ex-mode-btn" onclick="demarrerExercice('vocab')">
-            <div class="ex-mode-titre">📝 Vocabulaire</div>
-            <div class="ex-mode-desc">10 mots — reo Tahiti → Français<br>4 propositions, une seule bonne réponse</div>
+      <!-- Sous-onglets Exercices -->
+      <div class="ex-sous-tabs">
+        <button class="ex-sous-tab active" id="ex-stab-tahuri" onclick="showSousTab('tahuri')">🤖 Tāhuri</button>
+        <button class="ex-sous-tab" id="ex-stab-activites" onclick="showSousTab('activites')">📚 Mes activités</button>
+      </div>
+
+      <!-- Sous-onglet 1 : Exercices Tāhuri -->
+      <div id="ex-panel-tahuri">
+        <div class="card">
+          <div class="card-body">
+            <div class="ex-mode-btn" onclick="demarrerExercice('vocab')">
+              <div class="ex-mode-titre">📝 Vocabulaire</div>
+              <div class="ex-mode-desc">10 mots — reo Tahiti → Français<br>4 propositions, une seule bonne réponse</div>
+            </div>
+            <div class="ex-mode-btn" onclick="demarrerExercice('enonces')">
+              <div class="ex-mode-titre">💬 Énoncés</div>
+              <div class="ex-mode-desc">10 phrases courtes — reo Tahiti → Français<br>3 propositions, une seule bonne réponse</div>
+            </div>
+            <div class="ex-mode-btn" onclick="demarrerFlashcards()">
+              <div class="ex-mode-titre">🃏 Flashcards</div>
+              <div class="ex-mode-desc">5 mots — auto-évaluation<br>Je connaissais ? Oui / Non</div>
+            </div>
           </div>
-          <div class="ex-mode-btn" onclick="demarrerExercice('enonces')">
-            <div class="ex-mode-titre">💬 Énoncés</div>
-            <div class="ex-mode-desc">10 phrases courtes — reo Tahiti → Français<br>3 propositions, une seule bonne réponse</div>
-          </div>
-          <div class="ex-mode-btn" onclick="demarrerFlashcards()">
-            <div class="ex-mode-titre">🃏 Flashcards</div>
-            <div class="ex-mode-desc">5 mots — auto-évaluation<br>Je connaissais ? Oui / Non</div>
-          </div>
-          <div class="ex-mode-btn" onclick="showActivites()">
-            <div class="ex-mode-titre">🔗 Activités LearningApps</div>
-            <div class="ex-mode-desc">Exercices interactifs intégrés<br>Ajoutez vos propres liens</div>
+        </div>
+      </div>
+
+      <!-- Sous-onglet 2 : Mes activités -->
+      <div id="ex-panel-activites" style="display:none;">
+        <div class="card">
+          <div class="card-body">
+            <div id="activites-list"><div class="empty">Chargement…</div></div>
           </div>
         </div>
       </div>
@@ -704,15 +740,7 @@
             <span style="font-weight:700; font-size:0.9rem; color:var(--lagon);">🔗 Activités</span>
           </div>
 
-          <!-- Formulaire ajout — visible seulement si expert -->
-          <div class="entry-form" id="activite-form" style="display:none;">
-            <input id="act-titre" placeholder="Titre de l'activité (ex: Animaux — appariement)">
-            <input id="act-url" placeholder="URL embed (ex: https://learningapps.org/watch?v=...)">
-            <input id="act-categorie" placeholder="Catégorie (ex: Vocabulaire, Grammaire...)">
-            <button class="btn-sm" onclick="addActivite()">+ Ajouter</button>
-          </div>
-
-          <!-- Liste des activités -->
+          <!-- Liste des activités publiques -->
           <div id="activites-list"></div>
         </div>
       </div>
@@ -763,6 +791,7 @@
         <button class="expert-tab active" onclick="showExpertTab('corrections')">✏️ Corrections</button>
         <button class="expert-tab" onclick="showExpertTab('regles')">📋 Règles</button>
         <button class="expert-tab" onclick="showExpertTab('glossaire')">📌 Glossaire</button>
+        <button class="expert-tab" onclick="showExpertTab('activites')">🔗 Activités</button>
         <button class="expert-tab" onclick="showExpertTab('historique')">🕐 Historique</button>
       </div>
 
@@ -803,6 +832,19 @@
             <button class="btn-sm" onclick="addGlossaire()">+ Ajouter</button>
           </div>
           <div id="glossaire-list"></div>
+        </div>
+      </div>
+
+      <div id="etab-activites" class="card" style="display:none;">
+        <div class="card-header">Activités — Gestion des exercices interactifs</div>
+        <div class="card-body">
+          <div class="entry-form">
+            <input id="exp-act-titre" placeholder="Titre (ex: Animaux — appariement)">
+            <input id="exp-act-url" placeholder="URL embed LearningApps ou autre exerciseur">
+            <input id="exp-act-categorie" placeholder="Catégorie (ex: Vocabulaire, Grammaire...)">
+            <button class="btn-sm" onclick="addActiviteExpert()">+ Publier l'activité</button>
+          </div>
+          <div id="exp-activites-list"></div>
         </div>
       </div>
 
@@ -1186,9 +1228,10 @@ function showExpertTab(tab) {
   expertTabActif = tab;
   document.querySelectorAll('.expert-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
-  ['corrections','regles','glossaire','historique'].forEach(t => {
+  ['corrections','regles','glossaire','activites','historique'].forEach(t => {
     document.getElementById('etab-' + t).style.display = t === tab ? 'block' : 'none';
   });
+  if (tab === 'activites') chargerActivites().then(() => renderActivitesExpert());
   renderExpert();
 }
 
@@ -1198,6 +1241,64 @@ function renderExpert() {
   renderRegles();
   renderGlossaire();
   renderHistoriqueExpert();
+}
+
+// ACTIVITÉS EXPERT
+async function addActiviteExpert() {
+  const titre = document.getElementById('exp-act-titre').value.trim();
+  const url = document.getElementById('exp-act-url').value.trim();
+  const categorie = document.getElementById('exp-act-categorie').value.trim() || 'Général';
+  if (!titre || !url) return;
+
+  try {
+    const resp = await fetch('/api/activites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ titre, url, categorie })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      document.getElementById('exp-act-titre').value = '';
+      document.getElementById('exp-act-url').value = '';
+      document.getElementById('exp-act-categorie').value = '';
+      await chargerActivites();
+      renderActivitesExpert();
+    }
+  } catch(e) {
+    alert('Erreur lors de l\'ajout');
+  }
+}
+
+async function supprimerActiviteExpert(id) {
+  try {
+    await fetch('/api/activites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    await chargerActivites();
+    renderActivitesExpert();
+  } catch(e) {
+    alert('Erreur lors de la suppression');
+  }
+}
+
+function renderActivitesExpert() {
+  const el = document.getElementById('exp-activites-list');
+  if (!el) return;
+  if (!activites || activites.length === 0) {
+    el.innerHTML = '<div class="empty">Aucune activité publiée</div>';
+    return;
+  }
+  el.innerHTML = activites.map(a => `
+    <div class="entry-item">
+      <div class="entry-content">
+        <div class="entry-main">🔗 ${a.titre}</div>
+        <div class="entry-note">${a.categorie || 'Général'} • ${a.date || ''}</div>
+        <div class="entry-note" style="font-size:0.72rem; color:#bbb;">${a.url}</div>
+      </div>
+      <button class="btn-sm danger" onclick="supprimerActiviteExpert(${a.id})">✕</button>
+    </div>`).join('');
 }
 
 // HISTORIQUE EXPERT
@@ -1341,6 +1442,19 @@ function renderGlossaire() {
 }
 
 // ============================================================
+// SOUS-ONGLETS EXERCICES
+// ============================================================
+function showSousTab(tab) {
+  document.querySelectorAll('.ex-sous-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ex-stab-' + tab).classList.add('active');
+  document.getElementById('ex-panel-tahuri').style.display = tab === 'tahuri' ? 'block' : 'none';
+  document.getElementById('ex-panel-activites').style.display = tab === 'activites' ? 'block' : 'none';
+  if (tab === 'activites') {
+    chargerActivites().then(() => renderActivites());
+  }
+}
+
+// ============================================================
 // ACTIVITÉS LEARNINGAPPS — Upstash Redis
 // ============================================================
 let activites = [];
@@ -1357,7 +1471,6 @@ async function chargerActivites() {
 function showActivites() {
   document.getElementById('ex-accueil').style.display = 'none';
   document.getElementById('ex-activites').style.display = 'block';
-  // Montrer formulaire seulement si expert connecté
   const form = document.getElementById('activite-form');
   if (form) form.style.display = expertUnlocked ? 'block' : 'none';
   chargerActivites().then(() => renderActivites());
