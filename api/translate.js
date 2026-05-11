@@ -32,10 +32,14 @@ Règle nei/ra :
 ## LEXIQUE SUPPLÉMENTAIRE VALIDÉ
 - chocolat = tōtōrā
 - étoile = fetiʻa (avec ʻeta — ne jamais écrire fetia sans ʻeta)
+- partir = haere (partir en général, s'en aller)
+- partir (en voyage) = reva (départ pour un voyage, une traversée)
 - fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
 - enfant (singulier, sans précision de sexe) = tamāiti
+- partir = haere (partir en général, s'en aller)
+- partir (en voyage) = reva (départ pour un voyage, une traversée)
 - fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
