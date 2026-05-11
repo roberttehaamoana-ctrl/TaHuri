@@ -704,10 +704,11 @@
             <span style="font-weight:700; font-size:0.9rem; color:var(--lagon);">🔗 Activités</span>
           </div>
 
-          <!-- Formulaire ajout -->
-          <div class="entry-form" id="activite-form">
+          <!-- Formulaire ajout — visible seulement si expert -->
+          <div class="entry-form" id="activite-form" style="display:none;">
             <input id="act-titre" placeholder="Titre de l'activité (ex: Animaux — appariement)">
-            <input id="act-url" placeholder="URL LearningApps (ex: https://learningapps.org/watch?v=...)">
+            <input id="act-url" placeholder="URL embed (ex: https://learningapps.org/watch?v=...)">
+            <input id="act-categorie" placeholder="Catégorie (ex: Vocabulaire, Grammaire...)">
             <button class="btn-sm" onclick="addActivite()">+ Ajouter</button>
           </div>
 
@@ -1340,14 +1341,26 @@ function renderGlossaire() {
 }
 
 // ============================================================
-// ACTIVITÉS LEARNINGAPPS
+// ACTIVITÉS LEARNINGAPPS — Upstash Redis
 // ============================================================
-let activites = JSON.parse(localStorage.getItem('tahuri_activites') || '[]');
+let activites = [];
+
+async function chargerActivites() {
+  try {
+    const resp = await fetch('/api/activites');
+    activites = await resp.json();
+  } catch(e) {
+    activites = [];
+  }
+}
 
 function showActivites() {
   document.getElementById('ex-accueil').style.display = 'none';
   document.getElementById('ex-activites').style.display = 'block';
-  renderActivites();
+  // Montrer formulaire seulement si expert connecté
+  const form = document.getElementById('activite-form');
+  if (form) form.style.display = expertUnlocked ? 'block' : 'none';
+  chargerActivites().then(() => renderActivites());
 }
 
 function quitterActivites() {
@@ -1356,37 +1369,50 @@ function quitterActivites() {
   fermerActivite();
 }
 
-function addActivite() {
+async function addActivite() {
   const titre = document.getElementById('act-titre').value.trim();
   const url = document.getElementById('act-url').value.trim();
+  const categorie = document.getElementById('act-categorie')?.value.trim() || 'Général';
   if (!titre || !url) return;
-  activites.push({ id: Date.now(), titre, url });
-  localStorage.setItem('tahuri_activites', JSON.stringify(activites));
-  document.getElementById('act-titre').value = '';
-  document.getElementById('act-url').value = '';
-  renderActivites();
+
+  try {
+    const resp = await fetch('/api/activites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ titre, url, categorie })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      document.getElementById('act-titre').value = '';
+      document.getElementById('act-url').value = '';
+      await chargerActivites();
+      renderActivites();
+    }
+  } catch(e) {
+    alert('Erreur lors de l'ajout');
+  }
 }
 
 function renderActivites() {
   const el = document.getElementById('activites-list');
-  if (activites.length === 0) {
-    el.innerHTML = '<div class="empty">Aucune activité ajoutée</div>';
+  if (!activites || activites.length === 0) {
+    el.innerHTML = '<div class="empty">Aucune activité disponible</div>';
     return;
   }
   el.innerHTML = activites.map(a => `
     <div class="entry-item">
       <div class="entry-content" style="cursor:pointer;" onclick="ouvrirActivite(${a.id})">
         <div class="entry-main">🔗 ${a.titre}</div>
-        <div class="entry-note">${a.url}</div>
+        <div class="entry-note">${a.categorie || 'Général'} • ${a.date || ''}</div>
       </div>
-      <button class="btn-sm danger" onclick="supprimerActivite(${a.id})">✕</button>
+      ${expertUnlocked ? `<button class="btn-sm danger" onclick="supprimerActivite(${a.id})">✕</button>` : ''}
     </div>`).join('');
 }
 
 function ouvrirActivite(id) {
   const a = activites.find(x => x.id === id);
   if (!a) return;
-  document.getElementById('activite-form').style.display = 'none';
+  document.getElementById('activite-form') && (document.getElementById('activite-form').style.display = 'none');
   document.getElementById('activites-list').style.display = 'none';
   document.getElementById('activite-viewer').style.display = 'block';
   document.getElementById('act-viewer-titre').textContent = a.titre;
@@ -1395,15 +1421,23 @@ function ouvrirActivite(id) {
 
 function fermerActivite() {
   document.getElementById('activite-viewer').style.display = 'none';
-  document.getElementById('activite-form').style.display = 'block';
+  document.getElementById('activite-form') && (document.getElementById('activite-form').style.display = 'block');
   document.getElementById('activites-list').style.display = 'block';
   document.getElementById('act-iframe').src = '';
 }
 
-function supprimerActivite(id) {
-  activites = activites.filter(a => a.id !== id);
-  localStorage.setItem('tahuri_activites', JSON.stringify(activites));
-  renderActivites();
+async function supprimerActivite(id) {
+  try {
+    await fetch('/api/activites', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    await chargerActivites();
+    renderActivites();
+  } catch(e) {
+    alert('Erreur lors de la suppression');
+  }
 }
 
 // ============================================================
