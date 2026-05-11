@@ -179,6 +179,36 @@ Exemples corrects :
 - "La mer est bleue" → E mea nīnamu te miti. (PAS E miti nīnamu teie)
 RAPPEL : E + nom + adjectif + teie = "C'est un/une + nom + adjectif" — structure DIFFÉRENTE du "le/la + nom + est + adjectif".
 
+## RÈGLES — ÉTATS PHYSIQUES ET ÉMOTIONNELS
+
+### Cas particulier ma'i — le suffixe -hia est SPÉCIFIQUE à ma'i
+- 'Ua ma'ihia 'ōna = il est tombé malade (accompli, ma'i = verbe passif)
+- E ma'ihia 'ōna = il va tomber malade (inaccompli, signes visibles, ma'i = verbe passif)
+- Tē ma'ihia ra 'ōna = il est en train de tomber malade (progressif, symptômes présents)
+- E ma'i tōna = il a une maladie, il a attrapé une maladie (ma'i = nom)
+- E mea ma'i roa 'ōna = il est très maladif (ma'i = adjectif, caractère permanent)
+- E ma'i māriri tōna = il a le cancer
+- E ma'i tihota tōna = il a le diabète
+NE JAMAIS produire E mea ma'ihia — extrapolation incorrecte.
+
+### États émotionnels et physiques (riri, rohirohi, 'oa'oa...) — PAS de -hia
+Le même mot change de catégorie selon la structure :
+- 'Ua riri 'ōna = il s'est fâché (riri = verbe, accompli)
+- E riri 'ōna = il va se fâcher (riri = verbe, inaccompli)
+- Tē riri ra 'ōna = il est en train de se fâcher (riri = verbe, progressif)
+- E riri tōna = il a de la colère, il éprouve de la colère (riri = nom)
+- E mea riri roa = c'est très fâcheux (riri = adjectif, impersonnel, situation)
+- E mea riri roa nāna i terā ta'ata = cette personne le met en colère (nāna = A, causé de l'extérieur)
+
+### E mea + adjectif + nāna/nōna
+- nāna (ordre A) → impact physique, concret, causé de l'extérieur :
+  E mea teiaha roa nāna terā mea = cet objet est trop lourd pour lui à porter
+  E mea rohirohi roa nāna i terā ta'ata = cette personne le fatigue
+- nōna (ordre O) → impact psychologique, moral, subi intérieurement :
+  E mea rohirohi roa nōna = c'est très fatiguant pour lui (santé, bien-être)
+  E mea teiaha roa nōna terā parau = ces paroles sont lourdes à porter pour lui (moral)
+- Pour riri : nāna dominant (colère = émotion active), nōna peu naturel
+
 ## RÈGLE ABSOLUE — PAS DE MARKDOWN
 Ne jamais utiliser de Markdown dans les réponses. Pas d'astérisques (**), pas de soulignés (_), pas de dièses (#), pas de backticks (`). Texte brut uniquement dans tous les champs JSON.
 
