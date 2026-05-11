@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Tāhuri">
+<meta name="apple-mobile-web-app-title" content="TāHuri">
 <meta name="theme-color" content="#0D6E6E">
 <link rel="manifest" href="/manifest.json">
-<title>Tāhuri — Traducteur reo Tahiti</title>
+<title>TāHuri — Traducteur reo Tahiti</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,7 +65,6 @@
   .pdj-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
   .pdj-tah { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--or); }
   .pdj-fr { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
-  .pdj-note { font-size: 0.75rem; opacity: 0.6; margin-top: 4px; font-style: italic; }
 
   /* NAVIGATION TABS */
   .tabs {
@@ -536,14 +535,14 @@
 
 <header>
   <div class="logo">T<span>ā</span>huri</div>
-  <div class="tagline">Traducteur reo Tahiti — Normes Fare Vānaʻa</div>
+  <div class="tagline">'Ei reo, 'ei huri ara</div>
 </header>
 
 <div class="phrase-du-jour" id="phrase-du-jour">
   <div class="pdj-label">🌺 Expression du jour</div>
   <div class="pdj-tah" id="pdj-tah">—</div>
   <div class="pdj-fr" id="pdj-fr">—</div>
-  <div class="pdj-note" id="pdj-note"></div>
+
 </div>
 
 <div class="tabs">
@@ -646,11 +645,11 @@
     <div id="ex-accueil">
       <!-- Sous-onglets Exercices -->
       <div class="ex-sous-tabs">
-        <button class="ex-sous-tab active" id="ex-stab-tahuri" onclick="showSousTab('tahuri')">🤖 Tāhuri</button>
+        <button class="ex-sous-tab active" id="ex-stab-tahuri" onclick="showSousTab('tahuri')">🤖 TāHuri</button>
         <button class="ex-sous-tab" id="ex-stab-activites" onclick="showSousTab('activites')">📚 Mes activités</button>
       </div>
 
-      <!-- Sous-onglet 1 : Exercices Tāhuri -->
+      <!-- Sous-onglet 1 : Exercices TāHuri -->
       <div id="ex-panel-tahuri">
         <div class="card">
           <div class="card-body">
@@ -866,7 +865,7 @@
 </main>
 
 <footer>
-  Tāhuri • Normes orthographiques Fare Vānaʻa • ʻeta (U+02BB) • Macron tārava
+  TāHuri • Normes orthographiques Fare Vānaʻa • ʻeta (U+02BB) • Macron tārava
 </footer>
 
 <script>
@@ -952,7 +951,7 @@ function handleKeydown(e) {
 // TRADUCTION
 // ============================================================
 function buildSystemPrompt() {
-  let prompt = `Tu es Tāhuri, un assistant expert en traduction entre le français et le reo Tahiti (tahitien). Tu appliques strictement les normes orthographiques de la Fare Vānaʻa (Académie tahitienne) : le coup de glotte s'écrit ʻeta (U+02BB : ʻ) et jamais avec une apostrophe ordinaire ; les voyelles longues portent un tārava (macron : ā ē ī ō ū). La langue source et cible est exclusivement le reo Tahiti — jamais le hawaiien, le māori, le samoan ou toute autre langue polynésienne. La syntaxe du reo Tahiti est de type VSO (Verbe–Sujet–Objet). Tu maîtrises les particules grammaticales (e, ua, te, i, o, a, no, na, etc.), les marqueurs aspectuels, et les registres formel/informel.
+  let prompt = `Tu es TāHuri, un assistant expert en traduction entre le français et le reo Tahiti (tahitien). Tu appliques strictement les normes orthographiques de la Fare Vānaʻa (Académie tahitienne) : le coup de glotte s'écrit ʻeta (U+02BB : ʻ) et jamais avec une apostrophe ordinaire ; les voyelles longues portent un tārava (macron : ā ē ī ō ū). La langue source et cible est exclusivement le reo Tahiti — jamais le hawaiien, le māori, le samoan ou toute autre langue polynésienne. La syntaxe du reo Tahiti est de type VSO (Verbe–Sujet–Objet). Tu maîtrises les particules grammaticales (e, ua, te, i, o, a, no, na, etc.), les marqueurs aspectuels, et les registres formel/informel.
 
 Réponds UNIQUEMENT en JSON valide avec cette structure :
 {
@@ -1815,7 +1814,7 @@ function afficherPhraseduJour() {
   const expr = EXPRESSIONS[index];
   document.getElementById('pdj-tah').textContent = expr.tah;
   document.getElementById('pdj-fr').textContent = expr.fr;
-  document.getElementById('pdj-note').textContent = expr.note;
+
 }
 
 // ============================================================
@@ -1839,7 +1838,7 @@ function afficherBandeauInstall() {
       box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
     `;
     bandeau.innerHTML = `
-      <span>📲 Installer Tāhuri : appuyez sur <strong>⬆️</strong> puis <strong>"Sur l'écran d'accueil"</strong></span>
+      <span>📲 Installer TāHuri : appuyez sur <strong>⬆️</strong> puis <strong>"Sur l'écran d'accueil"</strong></span>
       <button onclick="dismissInstall()" style="background:none;border:1.5px solid rgba(255,255,255,0.5);border-radius:6px;color:white;padding:4px 10px;cursor:pointer;font-size:0.8rem;flex-shrink:0;">✕</button>
     `;
     document.body.appendChild(bandeau);
