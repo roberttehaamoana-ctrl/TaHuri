@@ -636,6 +636,10 @@
             <div class="ex-mode-titre">🃏 Flashcards</div>
             <div class="ex-mode-desc">5 mots — auto-évaluation<br>Je connaissais ? Oui / Non</div>
           </div>
+          <div class="ex-mode-btn" onclick="showActivites()">
+            <div class="ex-mode-titre">🔗 Activités LearningApps</div>
+            <div class="ex-mode-desc">Exercices interactifs intégrés<br>Ajoutez vos propres liens</div>
+          </div>
         </div>
       </div>
     </div>
@@ -691,7 +695,40 @@
       </div>
     </div>
 
-    <!-- Résultats finaux -->
+    <!-- Activités LearningApps -->
+    <div id="ex-activites" style="display:none;">
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <button class="btn-sm secondary" onclick="quitterActivites()">← Exercices</button>
+            <span style="font-weight:700; font-size:0.9rem; color:var(--lagon);">🔗 Activités</span>
+          </div>
+
+          <!-- Formulaire ajout -->
+          <div class="entry-form" id="activite-form">
+            <input id="act-titre" placeholder="Titre de l'activité (ex: Animaux — appariement)">
+            <input id="act-url" placeholder="URL LearningApps (ex: https://learningapps.org/watch?v=...)">
+            <button class="btn-sm" onclick="addActivite()">+ Ajouter</button>
+          </div>
+
+          <!-- Liste des activités -->
+          <div id="activites-list"></div>
+        </div>
+      </div>
+
+      <!-- Iframe viewer -->
+      <div id="activite-viewer" style="display:none;">
+        <div class="card" style="margin-top:0;">
+          <div class="card-body" style="padding:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <button class="btn-sm secondary" onclick="fermerActivite()">← Retour</button>
+              <span id="act-viewer-titre" style="font-weight:600; font-size:0.9rem; color:var(--lagon);"></span>
+            </div>
+            <iframe id="act-iframe" src="" style="width:100%; height:500px; border:none; border-radius:10px; background:var(--sable);" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="ex-fin" style="display:none;">
       <div class="card">
         <div class="card-body" style="text-align:center; padding:30px;">
@@ -1300,6 +1337,73 @@ function renderGlossaire() {
       </div>
       <button class="btn-sm danger" onclick="removeGlossaire(${g.id})">✕</button>
     </div>`).join('');
+}
+
+// ============================================================
+// ACTIVITÉS LEARNINGAPPS
+// ============================================================
+let activites = JSON.parse(localStorage.getItem('tahuri_activites') || '[]');
+
+function showActivites() {
+  document.getElementById('ex-accueil').style.display = 'none';
+  document.getElementById('ex-activites').style.display = 'block';
+  renderActivites();
+}
+
+function quitterActivites() {
+  document.getElementById('ex-activites').style.display = 'none';
+  document.getElementById('ex-accueil').style.display = 'block';
+  fermerActivite();
+}
+
+function addActivite() {
+  const titre = document.getElementById('act-titre').value.trim();
+  const url = document.getElementById('act-url').value.trim();
+  if (!titre || !url) return;
+  activites.push({ id: Date.now(), titre, url });
+  localStorage.setItem('tahuri_activites', JSON.stringify(activites));
+  document.getElementById('act-titre').value = '';
+  document.getElementById('act-url').value = '';
+  renderActivites();
+}
+
+function renderActivites() {
+  const el = document.getElementById('activites-list');
+  if (activites.length === 0) {
+    el.innerHTML = '<div class="empty">Aucune activité ajoutée</div>';
+    return;
+  }
+  el.innerHTML = activites.map(a => `
+    <div class="entry-item">
+      <div class="entry-content" style="cursor:pointer;" onclick="ouvrirActivite(${a.id})">
+        <div class="entry-main">🔗 ${a.titre}</div>
+        <div class="entry-note">${a.url}</div>
+      </div>
+      <button class="btn-sm danger" onclick="supprimerActivite(${a.id})">✕</button>
+    </div>`).join('');
+}
+
+function ouvrirActivite(id) {
+  const a = activites.find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('activite-form').style.display = 'none';
+  document.getElementById('activites-list').style.display = 'none';
+  document.getElementById('activite-viewer').style.display = 'block';
+  document.getElementById('act-viewer-titre').textContent = a.titre;
+  document.getElementById('act-iframe').src = a.url;
+}
+
+function fermerActivite() {
+  document.getElementById('activite-viewer').style.display = 'none';
+  document.getElementById('activite-form').style.display = 'block';
+  document.getElementById('activites-list').style.display = 'block';
+  document.getElementById('act-iframe').src = '';
+}
+
+function supprimerActivite(id) {
+  activites = activites.filter(a => a.id !== id);
+  localStorage.setItem('tahuri_activites', JSON.stringify(activites));
+  renderActivites();
 }
 
 // ============================================================
