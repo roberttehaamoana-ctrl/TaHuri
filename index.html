@@ -906,6 +906,7 @@
         </div>
       </div>
 
+      <button id="btn-switch-traductions" class="btn-sm" onclick="toggleTraductions()" style="width:100%; margin-top:4px;">⏸ Désactiver les traductions</button>
       <button class="btn-sm danger" onclick="lockExpert()" style="width:100%; margin-top:4px;">🔒 Verrouiller</button>
     </div>
   </div>
@@ -1335,6 +1336,43 @@ function renderActivitesExpert() {
       </div>
       <button class="btn-sm danger" onclick="supprimerActiviteExpert(${a.id})">✕</button>
     </div>`).join('');
+}
+
+// INTERRUPTEUR TRADUCTIONS
+async function toggleTraductions() {
+  const btn = document.getElementById('btn-switch-traductions');
+  const actif = btn.textContent.includes('Désactiver');
+
+  try {
+    const REDIS_URL = '/api/glossaire'; // on passe par une route proxy
+    await fetch('/api/switch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ actif: !actif })
+    });
+    btn.textContent = actif ? '▶ Activer les traductions' : '⏸ Désactiver les traductions';
+    btn.style.background = actif ? 'var(--erreur)' : 'var(--lagon)';
+    alert(actif ? 'Traductions désactivées pour tous les utilisateurs.' : 'Traductions réactivées.');
+  } catch(e) {
+    alert('Erreur lors du changement.');
+  }
+}
+
+async function chargerEtatTraductions() {
+  try {
+    const resp = await fetch('/api/switch');
+    const data = await resp.json();
+    const btn = document.getElementById('btn-switch-traductions');
+    if (btn) {
+      if (data.actif === false) {
+        btn.textContent = '▶ Activer les traductions';
+        btn.style.background = 'var(--erreur)';
+      } else {
+        btn.textContent = '⏸ Désactiver les traductions';
+        btn.style.background = 'var(--lagon)';
+      }
+    }
+  } catch(e) {}
 }
 
 // HISTORIQUE EXPERT
