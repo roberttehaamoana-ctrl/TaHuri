@@ -240,6 +240,54 @@
   .collapsible.closed .result-label::after { content: ' ▸'; }
 
   /* LOADING */
+  .loading-messages {
+    text-align: center;
+    padding: 24px 16px;
+    animation: fadeIn 0.3s ease;
+  }
+  .loading-tiare {
+    font-size: 2rem;
+    animation: pulse 1.2s ease-in-out infinite;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .loading-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--lagon);
+    font-style: italic;
+    min-height: 28px;
+    transition: opacity 0.4s ease;
+  }
+  .loading-bar {
+    height: 3px;
+    background: var(--sable-dark);
+    border-radius: 2px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .loading-bar-inner {
+    height: 100%;
+    background: var(--lagon);
+    border-radius: 2px;
+    animation: loadingBar 3s ease-in-out infinite;
+    width: 0%;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+  }
+  @keyframes loadingBar {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    90% { width: 90%; }
+    100% { width: 90%; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .spinner {
     display: inline-block;
     width: 20px; height: 20px;
@@ -986,8 +1034,9 @@ async function traduire() {
 
   const btn = document.getElementById('btn-traduire');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Traduction en cours…';
+  btn.innerHTML = '🌺';
   document.getElementById('result-zone').innerHTML = '';
+  afficherLoadingMessages();
 
   const sens = direction === 'fr-to-tah' ? 'français vers reo Tahiti' : 'reo Tahiti vers français';
   const userMsg = `Traduis ce texte du ${sens} : "${texte}"`;
@@ -1025,6 +1074,7 @@ async function traduire() {
   } finally {
     btn.disabled = false;
     btn.innerHTML = 'Traduire';
+    arreterLoadingMessages();
   }
 }
 
@@ -1807,6 +1857,46 @@ function changerDirectionFC() {
   fcIndex = 0; fcReussis = 0; fcRates = 0;
   fcDeck = fcDeck.sort(() => Math.random() - 0.5);
   afficherCarteFC();
+}
+
+// ============================================================
+// ANIMATION DE CHARGEMENT
+// ============================================================
+const LOADING_MESSAGES = [
+  "TāHuri réfléchit…",
+  "Consultation du Fare Vānaʻa…",
+  "Analyse de la structure…",
+  "Mise en forme de la réponse…",
+  "Vérification orthographique…",
+  "E fa'ata'a ra TāHuri…",
+];
+
+let loadingInterval = null;
+let loadingMsgIndex = 0;
+
+function afficherLoadingMessages() {
+  loadingMsgIndex = 0;
+  document.getElementById('result-zone').innerHTML = `
+    <div class="loading-messages">
+      <span class="loading-tiare">🌺</span>
+      <div class="loading-msg" id="loading-msg">${LOADING_MESSAGES[0]}</div>
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+    </div>`;
+
+  loadingInterval = setInterval(() => {
+    loadingMsgIndex = (loadingMsgIndex + 1) % LOADING_MESSAGES.length;
+    const el = document.getElementById('loading-msg');
+    if (el) {
+      el.style.opacity = '0';
+      setTimeout(() => {
+        if (el) { el.textContent = LOADING_MESSAGES[loadingMsgIndex]; el.style.opacity = '1'; }
+      }, 200);
+    }
+  }, 1800);
+}
+
+function arreterLoadingMessages() {
+  if (loadingInterval) { clearInterval(loadingInterval); loadingInterval = null; }
 }
 
 // ============================================================
