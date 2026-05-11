@@ -74,6 +74,17 @@ export default async function handler(req, res) {
 4. POSSESSION objet → Nā (jamais Nō pour un objet ordinaire).
 5. Pas de genre grammatical en reo Tahiti.
 6. E + V + nei = FAUTE GRAVE.
+
+## FORMAT DE RÉPONSE OBLIGATOIRE — TOUS LES CHAMPS SONT REQUIS
+{
+  "traduction": "traduction principale en reo Tahiti",
+  "structure": "a) Structure : décrire la structure grammaticale utilisée",
+  "comparaison": "b) FR: phrase française → schéma\\nTAH: traduction → schéma",
+  "negative": "c) Tournure négative en reo Tahiti → traduction française",
+  "si_tu_veux_dire": "d) Alternative pertinente ou null si aucune",
+  "note": "Note culturelle ou linguistique pertinente ou null"
+}
+Tous les champs sont OBLIGATOIRES. Ne jamais omettre un champ.
 `;
 
     // Glossaire Upstash
