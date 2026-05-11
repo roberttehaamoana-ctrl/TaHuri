@@ -1088,7 +1088,9 @@ async function traduire() {
     }
 
     const data = await resp.json();
-    const raw = data.content[0].text;
+    console.log('API response:', JSON.stringify(data).slice(0, 500));
+    const raw = data.content?.[0]?.text;
+    if (!raw) throw new Error('Réponse vide de l\'API — ' + JSON.stringify(data).slice(0, 200));
     // Nettoyer le markdown et extraire le JSON même si du texte entoure
     let clean = raw.replace(/```json|```/g, '').trim();
     const jsonMatch = clean.match(/\{[\s\S]*\}/);
