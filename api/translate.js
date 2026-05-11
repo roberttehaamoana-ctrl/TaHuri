@@ -85,6 +85,22 @@ export default async function handler(req, res) {
   try {
     const { messages, system_extra } = req.body;
 
+    // Charger le glossaire Upstash
+    let glossaireUpstash = [];
+    try {
+      const REDIS_URL = process.env.KV_REST_API_URL;
+      const REDIS_TOKEN = process.env.KV_REST_API_TOKEN;
+      const redisResp = await fetch(`${REDIS_URL}/get/tahuri:glossaire`, {
+        headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
+      });
+      const redisData = await redisResp.json();
+      if (redisData.result) {
+        glossaireUpstash = JSON.parse(redisData.result);
+      }
+    } catch(e) {
+      console.log('Glossaire Upstash non disponible:', e.message);
+    }
+
     let systemPrompt = '';
     
     if (knowledge) {
@@ -105,6 +121,14 @@ export default async function handler(req, res) {
     }
 
     systemPrompt += FORMAT;
+
+    // Injecter le glossaire Upstash (priorité absolue)
+    if (glossaireUpstash.length > 0) {
+      systemPrompt += '\n\n## GLOSSAIRE VALIDÉ — PRIORITÉ ABSOLUE (ne jamais contredire)\n';
+      glossaireUpstash.forEach(e => {
+        systemPrompt += `- ${e.fr} = ${e.tah}${e.note ? ' (' + e.note + ')' : ''}\n`;
+      });
+    }
 
     if (system_extra) {
       systemPrompt += '\n\n## MÉMOIRE EXPERT (priorité maximale)\n' + system_extra;
