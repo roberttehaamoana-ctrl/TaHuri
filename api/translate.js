@@ -35,19 +35,43 @@ Règle nei/ra :
 - partir = haere (partir en général, s'en aller)
 - partir (en voyage) = reva (départ pour un voyage, une traversée)
 
-## RÈGLE ABSOLUE — au / vau (1ère personne singulier)
-La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot qui la précède :
-- Mot précédent se termine par E ou I → utiliser AU
-  Exemples : E haere AU (haere → e), Tē 'amu nei AU (nei → i), E hīmene AU (hīmene → e)
-- Mot précédent se termine par A, O ou U → utiliser VAU
-  Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
-Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
-- fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
-- fille = tamāhine
-- enfants (pluriel) = tamariiˊ
-- enfant (singulier, sans précision de sexe) = tamāiti
-- partir = haere (partir en général, s'en aller)
-- partir (en voyage) = reva (départ pour un voyage, une traversée)
+## RÈGLE ABSOLUE — POSSESSION O/A (Te fatura'a)
+
+### Ordre O — relation subie, reçue, inhérente (tō / nō)
+Appliquer O UNIQUEMENT pour ces catégories strictes, sans interprétation :
+- Parents, aînés, ancêtres, supérieurs hiérarchiques
+- Frères et sœurs (même génération)
+- Parties du corps (toujours, sans exception)
+- Qualités physiques, morales, psychologiques inhérentes
+- Lieu d'origine, île, district, village d'appartenance
+- Maison habitée par le possesseur
+- Vêtements, parures, accessoires portés sur soi
+- Fleur portée à l'oreille ou sur soi
+- Véhicule personnel utilisé (voiture, moto, vélo, pirogue...)
+- Tout transport en commun pris pour se déplacer (avion, bateau, bus, taxi...) — il est à ton service pour t'emmener, même si tu n'en es pas propriétaire → ordre O.
+
+### Ordre A — relation active, choisie, produite (tā / nā)
+Tout ce qui ne rentre PAS dans une catégorie O ci-dessus → ORDRE A par défaut.
+En particulier : tous les objets ordinaires (outils, nourriture, meubles, couteau, livre, stylo...)
+Enfants, élèves, subordonnés, animaux entretenus, plantes cultivées.
+- École : tā'u fare ha'api'ira'a (A — appliquer sans exception)
+- Salle de classe : tā'u piha ha'api'ira'a (A — appliquer sans exception)
+
+### Classe T (déterminant direct) vs Classe N (prédicative)
+- Classe T : tō/tā + pronom + nom → ex: Tā Hiro tipi = le couteau de Hiro
+- Classe N : nō/nā + nom propre/pronom + te + nom → ex: Nā Hiro te tipi = le couteau est à Hiro
+
+### Application stricte
+- Ne JAMAIS interpréter ou nuancer la règle au-delà des catégories ci-dessus
+- Si la catégorie n'est pas listée dans O → c'est A, sans exception
+- Couteau, outil, objet ordinaire → TOUJOURS A → Nā (jamais Nō)
+
+### Rubrique "Si tu veux dire..." pour la possession
+Toujours proposer les deux structures complémentaires :
+- Structure T (possession directe) : Tā/Tō + possesseur + nom
+- Structure N (possession prédicative) : Nā/Nō + possesseur + teie/tenā/terā + nom
+  (teie = ici/proche du locuteur, tenā = là/proche de l'interlocuteur, terā = là-bas/éloigné)
+Ne proposer AUCUNE autre alternative pour la possession.
 
 ## RÈGLE ABSOLUE — au / vau (1ère personne singulier)
 La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot qui la précède :
@@ -56,6 +80,60 @@ La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot
 - Mot précédent se termine par A, O ou U → utiliser VAU
   Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
 Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
+CRITIQUE : Cette règle doit être appliquée dans TOUTES les sections de la réponse — traduction principale, comparaison, tournure négative, si_tu_veux_dire, note culturelle, exemples. Sans exception.
+- fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
+- fille = tamāhine
+- enfants (pluriel) = tamariiˊ
+- enfant (singulier, sans précision de sexe) = tamāiti
+- partir = haere (partir en général, s'en aller)
+- partir (en voyage) = reva (départ pour un voyage, une traversée)
+
+## RÈGLE ABSOLUE — POSSESSION O/A (Te fatura'a)
+
+### Ordre O — relation subie, reçue, inhérente (tō / nō)
+Appliquer O UNIQUEMENT pour ces catégories strictes, sans interprétation :
+- Parents, aînés, ancêtres, supérieurs hiérarchiques
+- Frères et sœurs (même génération)
+- Parties du corps (toujours, sans exception)
+- Qualités physiques, morales, psychologiques inhérentes
+- Lieu d'origine, île, district, village d'appartenance
+- Maison habitée par le possesseur
+- Vêtements, parures, accessoires portés sur soi
+- Fleur portée à l'oreille ou sur soi
+- Véhicule personnel utilisé (voiture, moto, vélo, pirogue...)
+- Tout transport en commun pris pour se déplacer (avion, bateau, bus, taxi...) — il est à ton service pour t'emmener, même si tu n'en es pas propriétaire → ordre O.
+
+### Ordre A — relation active, choisie, produite (tā / nā)
+Tout ce qui ne rentre PAS dans une catégorie O ci-dessus → ORDRE A par défaut.
+En particulier : tous les objets ordinaires (outils, nourriture, meubles, couteau, livre, stylo...)
+Enfants, élèves, subordonnés, animaux entretenus, plantes cultivées.
+- École : tā'u fare ha'api'ira'a (A — appliquer sans exception)
+- Salle de classe : tā'u piha ha'api'ira'a (A — appliquer sans exception)
+
+### Classe T (déterminant direct) vs Classe N (prédicative)
+- Classe T : tō/tā + pronom + nom → ex: Tā Hiro tipi = le couteau de Hiro
+- Classe N : nō/nā + nom propre/pronom + te + nom → ex: Nā Hiro te tipi = le couteau est à Hiro
+
+### Application stricte
+- Ne JAMAIS interpréter ou nuancer la règle au-delà des catégories ci-dessus
+- Si la catégorie n'est pas listée dans O → c'est A, sans exception
+- Couteau, outil, objet ordinaire → TOUJOURS A → Nā (jamais Nō)
+
+### Rubrique "Si tu veux dire..." pour la possession
+Toujours proposer les deux structures complémentaires :
+- Structure T (possession directe) : Tā/Tō + possesseur + nom
+- Structure N (possession prédicative) : Nā/Nō + possesseur + teie/tenā/terā + nom
+  (teie = ici/proche du locuteur, tenā = là/proche de l'interlocuteur, terā = là-bas/éloigné)
+Ne proposer AUCUNE autre alternative pour la possession.
+
+## RÈGLE ABSOLUE — au / vau (1ère personne singulier)
+La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot qui la précède :
+- Mot précédent se termine par E ou I → utiliser AU
+  Exemples : E haere AU (haere → e), Tē 'amu nei AU (nei → i), E hīmene AU (hīmene → e)
+- Mot précédent se termine par A, O ou U → utiliser VAU
+  Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
+Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
+CRITIQUE : Cette règle doit être appliquée dans TOUTES les sections de la réponse — traduction principale, comparaison, tournure négative, si_tu_veux_dire, note culturelle, exemples. Sans exception.
 - fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
