@@ -93,10 +93,9 @@ La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot
   Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
 Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
 CRITIQUE : Cette règle doit être appliquée dans TOUTES les sections de la réponse — traduction principale, comparaison, tournure négative, si_tu_veux_dire, note culturelle, exemples. Sans exception.
-- fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
+- fils = tamāiti
 - fille = tamāhine
-- enfants (pluriel) = tamariiˊ
-- enfant (singulier, sans précision de sexe) = tamāiti
+- enfant / enfants (sans précision de sexe) = tamari'i
 - partir = haere (partir en général, s'en aller)
 - partir (en voyage) = reva (départ pour un voyage, une traversée)
 
@@ -158,10 +157,9 @@ La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot
   Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
 Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
 CRITIQUE : Cette règle doit être appliquée dans TOUTES les sections de la réponse — traduction principale, comparaison, tournure négative, si_tu_veux_dire, note culturelle, exemples. Sans exception.
-- fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
+- fils = tamāiti
 - fille = tamāhine
-- enfants (pluriel) = tamariiˊ
-- enfant (singulier, sans précision de sexe) = tamāiti
+- enfant / enfants (sans précision de sexe) = tamari'i
 
 ## RÈGLE ABSOLUE — GENRE EN REO TAHITI
 Le reo Tahiti n'a PAS de genre grammatical — ni masculin, ni féminin, ni neutre.
