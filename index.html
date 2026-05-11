@@ -839,6 +839,7 @@
         <button class="expert-tab" onclick="showExpertTab('regles')">📋 Règles</button>
         <button class="expert-tab" onclick="showExpertTab('glossaire')">📌 Glossaire</button>
         <button class="expert-tab" onclick="showExpertTab('activites')">🔗 Activités</button>
+        <button class="expert-tab" onclick="showExpertTab('lexique-expert')">📚 Lexique</button>
         <button class="expert-tab" onclick="showExpertTab('historique')">🕐 Historique</button>
       </div>
 
@@ -879,6 +880,31 @@
             <button class="btn-sm" onclick="addGlossaire()">+ Ajouter</button>
           </div>
           <div id="glossaire-list"></div>
+        </div>
+      </div>
+
+      <div id="etab-lexique-expert" class="card" style="display:none;">
+        <div class="card-header">Lexique — Ajouter des mots</div>
+        <div class="card-body">
+          <div class="entry-form">
+            <input id="lex-exp-fr" placeholder="Français (ex: tortue)">
+            <input id="lex-exp-tah" placeholder="Reo Tahiti (ex: honu)">
+            <select id="lex-exp-theme" style="padding:10px; border-radius:8px; border:1px solid var(--sable-dark); font-family:'Inter',sans-serif; font-size:0.9rem; background:white; color:var(--texte);">
+              <option value="">— Choisir un thème —</option>
+              <option>Animaux</option><option>Corps</option><option>Couleurs</option>
+              <option>Météo</option><option>Famille</option><option>Mois</option>
+              <option>Jours</option><option>Nombres</option><option>Formes</option>
+              <option>Nature</option><option>Alimentation</option><option>Vaisselle</option>
+              <option>École</option><option>Maison</option><option>Vêtements</option>
+              <option>Transports</option><option>Professions</option><option>Contraires</option>
+              <option>Émotions</option><option>Actions</option><option>Salutations</option>
+              <option>Sports</option><option>Polynésie</option><option>Pêche</option>
+              <option>Artisanat</option><option>Nouveau thème</option>
+            </select>
+            <input id="lex-exp-theme-custom" placeholder="Nouveau thème (si sélectionné ci-dessus)" style="display:none;">
+            <button class="btn-sm" onclick="addMotLexique()">+ Publier le mot</button>
+          </div>
+          <div id="exp-lexique-list"></div>
         </div>
       </div>
 
@@ -1171,8 +1197,11 @@ function chargerHistorique(i) {
   const h = historique[i];
   direction = h.dir;
   document.getElementById('input-text').value = h.input;
-  // Charger le glossaire Upstash au démarrage
+  // Charger le glossaire et le lexique Upstash au démarrage
   chargerGlossaireUpstash().then(() => {
+    if (document.getElementById('lex-results')) renderLexique();
+  });
+  chargerLexiqueUpstash().then(() => {
     if (document.getElementById('lex-results')) renderLexique();
   });
   showTab('traduire');
@@ -1206,7 +1235,7 @@ function filtrerTheme(t) {
 
 function filtrerLexique() {
   const q = (document.getElementById('lex-search')?.value || '').toLowerCase().trim();
-  let results = LEXIQUE.filter(e => {
+  let results = getLexiqueComplet().filter(e => {
     const matchTheme = !themeActif || e.theme === themeActif;
     const matchSearch = !q || e.fr.toLowerCase().includes(q) || e.tah.toLowerCase().includes(q);
     return matchTheme && matchSearch;
@@ -1265,7 +1294,7 @@ function showExpertTab(tab) {
   expertTabActif = tab;
   document.querySelectorAll('.expert-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
-  ['corrections','regles','glossaire','activites','historique'].forEach(t => {
+  ['corrections','regles','glossaire','activites','lexique-expert','historique'].forEach(t => {
     document.getElementById('etab-' + t).style.display = t === tab ? 'block' : 'none';
   });
   if (tab === 'activites') chargerActivites().then(() => renderActivitesExpert());
@@ -1280,6 +1309,101 @@ function renderExpert() {
   renderHistoriqueExpert();
 }
 
+// ============================================================
+// LEXIQUE UPSTASH — mots ajoutés par Expert
+// ============================================================
+let lexiqueUpstash = [];
+
+async function chargerLexiqueUpstash() {
+  try {
+    const resp = await fetch('/api/lexique');
+    if (resp.ok) {
+      lexiqueUpstash = await resp.json();
+      // Fusionner avec le LEXIQUE de base pour le rendu
+    }
+  } catch(e) {
+    lexiqueUpstash = [];
+  }
+}
+
+function getLexiqueComplet() {
+  // LEXIQUE de base + mots Upstash (sans doublons)
+  const ids = new Set(LEXIQUE.map(e => e.fr.toLowerCase()));
+  const nouveaux = lexiqueUpstash.filter(e => !ids.has(e.fr.toLowerCase()));
+  return [...LEXIQUE, ...nouveaux];
+}
+
+async function addMotLexique() {
+  const fr = document.getElementById('lex-exp-fr').value.trim();
+  const tah = document.getElementById('lex-exp-tah').value.trim();
+  let theme = document.getElementById('lex-exp-theme').value;
+  const themeCustom = document.getElementById('lex-exp-theme-custom').value.trim();
+  if (theme === 'Nouveau thème' && themeCustom) theme = themeCustom;
+  if (!fr || !tah || !theme || theme === 'Nouveau thème') return;
+
+  try {
+    const resp = await fetch('/api/lexique', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fr, tah, theme })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      document.getElementById('lex-exp-fr').value = '';
+      document.getElementById('lex-exp-tah').value = '';
+      document.getElementById('lex-exp-theme').value = '';
+      await chargerLexiqueUpstash();
+      renderLexiqueExpert();
+      renderLexique();
+    }
+  } catch(e) {
+    alert('Erreur lors de l\'ajout');
+  }
+}
+
+async function supprimerMotLexique(id) {
+  try {
+    await fetch('/api/lexique', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    await chargerLexiqueUpstash();
+    renderLexiqueExpert();
+    renderLexique();
+  } catch(e) {
+    alert('Erreur lors de la suppression');
+  }
+}
+
+function renderLexiqueExpert() {
+  const el = document.getElementById('exp-lexique-list');
+  if (!el) return;
+
+  // Afficher le sélecteur de nouveau thème
+  const select = document.getElementById('lex-exp-theme');
+  const custom = document.getElementById('lex-exp-theme-custom');
+  if (select) {
+    select.onchange = () => {
+      if (custom) custom.style.display = select.value === 'Nouveau thème' ? 'block' : 'none';
+    };
+  }
+
+  if (lexiqueUpstash.length === 0) {
+    el.innerHTML = '<div class="empty">Aucun mot ajouté</div>';
+    return;
+  }
+  el.innerHTML = lexiqueUpstash.map(e => `
+    <div class="entry-item">
+      <div class="entry-content">
+        <div class="entry-main">${e.fr} → ${e.tah}</div>
+        <div class="entry-note">${e.theme} • ${e.date || ''}</div>
+      </div>
+      <button class="btn-sm danger" onclick="supprimerMotLexique(${e.id})">✕</button>
+    </div>`).join('');
+}
+
+// ============================================================
 // ACTIVITÉS EXPERT
 async function addActiviteExpert() {
   const titre = document.getElementById('exp-act-titre').value.trim();
