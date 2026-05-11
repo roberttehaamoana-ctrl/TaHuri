@@ -6,6 +6,7 @@ let knowledge = null;
 try {
   const raw = readFileSync(join(process.cwd(), 'api', 'knowledge.json'), 'utf-8');
   knowledge = JSON.parse(raw);
+  console.log('knowledge.json chargé — grammaire:', knowledge.grammaire?.length, 'chars, lexique_specialise:', knowledge.lexique_specialise?.length, 'chars');
 } catch(e) {
   console.error('Erreur chargement knowledge.json:', e.message);
 }
@@ -66,9 +67,20 @@ export default async function handler(req, res) {
     let systemPrompt = '';
     
     if (knowledge) {
-      systemPrompt += knowledge.grammaire + '\n\n';
-      systemPrompt += '## LEXIQUE DE RÉFÉRENCE COMPLET (priorité absolue)\n';
-      systemPrompt += knowledge.lexique + '\n\n';
+      // Grammaire et règles
+      if (knowledge.grammaire) {
+        systemPrompt += knowledge.grammaire + '\n\n';
+      }
+      // Lexique validé DGEE/CRDP (338 entrées, source de référence absolue)
+      if (knowledge.lexique_valide) {
+        systemPrompt += '## LEXIQUE VALIDÉ DGEE/CRDP (priorité absolue — ne jamais contredire)\n';
+        systemPrompt += knowledge.lexique_valide + '\n\n';
+      }
+      // Lexiques spécialisés disciplinaires
+      if (knowledge.lexique_specialise) {
+        systemPrompt += '## LEXIQUES SPÉCIALISÉS (Enseigner, SVT, SPT, EPS)\n';
+        systemPrompt += knowledge.lexique_specialise + '\n\n';
+      }
     }
 
     systemPrompt += FORMAT;
