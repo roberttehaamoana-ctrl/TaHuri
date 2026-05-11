@@ -1087,8 +1087,11 @@ async function traduire() {
       throw new Error(err.error?.message || `Erreur API ${resp.status}`);
     }
 
-    const result = await resp.json();
-    if (result.error) throw new Error(result.error);
+    const data = await resp.json();
+    const raw = data.content[0].text;
+    console.log('RAW:', raw.slice(0, 300));
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
 
     afficherResultat(texte, result);
     sauvegarderHistorique(texte, result.traduction);
