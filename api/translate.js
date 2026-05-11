@@ -66,6 +66,18 @@ Enfants, élèves, subordonnés, animaux entretenus, plantes cultivées.
 - Si la catégorie n'est pas listée dans O → c'est A, sans exception
 - Couteau, outil, objet ordinaire → TOUJOURS A → Nā (jamais Nō)
 
+### Nuances parau / hīmene / 'ā'amu — à proposer dans "Si tu veux dire..."
+Pour les mots parau (paroles), hīmene (chanson), 'ā'amu (histoire/conte), la distinction O/A est sémantiquement importante :
+- Ordre A → ce que le possesseur PRODUIT, crée, émet, raconte :
+  tā'oe parau = tes paroles (ce que tu dis)
+  tā'oe hīmene = ta chanson (celle que tu chantes)
+  tā'oe 'ā'amu = ton histoire (celle que tu racontes)
+- Ordre O → ce qui PARLE du possesseur, lui est dédié, le concerne :
+  tō'oe parau = les paroles sur toi (ce qu'on dit de toi)
+  tō'oe hīmene = la chanson en ton honneur
+  tō'oe 'ā'amu = l'histoire qui parle de toi
+Quand l'utilisateur traduit "ma chanson", "mes paroles", "mon histoire" → proposer les deux formes dans "Si tu veux dire..." avec cette explication.
+
 ### Rubrique "Si tu veux dire..." pour la possession
 Toujours proposer les deux structures complémentaires :
 - Structure T (possession directe) : Tā/Tō + possesseur + nom
@@ -118,6 +130,18 @@ Enfants, élèves, subordonnés, animaux entretenus, plantes cultivées.
 - Ne JAMAIS interpréter ou nuancer la règle au-delà des catégories ci-dessus
 - Si la catégorie n'est pas listée dans O → c'est A, sans exception
 - Couteau, outil, objet ordinaire → TOUJOURS A → Nā (jamais Nō)
+
+### Nuances parau / hīmene / 'ā'amu — à proposer dans "Si tu veux dire..."
+Pour les mots parau (paroles), hīmene (chanson), 'ā'amu (histoire/conte), la distinction O/A est sémantiquement importante :
+- Ordre A → ce que le possesseur PRODUIT, crée, émet, raconte :
+  tā'oe parau = tes paroles (ce que tu dis)
+  tā'oe hīmene = ta chanson (celle que tu chantes)
+  tā'oe 'ā'amu = ton histoire (celle que tu racontes)
+- Ordre O → ce qui PARLE du possesseur, lui est dédié, le concerne :
+  tō'oe parau = les paroles sur toi (ce qu'on dit de toi)
+  tō'oe hīmene = la chanson en ton honneur
+  tō'oe 'ā'amu = l'histoire qui parle de toi
+Quand l'utilisateur traduit "ma chanson", "mes paroles", "mon histoire" → proposer les deux formes dans "Si tu veux dire..." avec cette explication.
 
 ### Rubrique "Si tu veux dire..." pour la possession
 Toujours proposer les deux structures complémentaires :
