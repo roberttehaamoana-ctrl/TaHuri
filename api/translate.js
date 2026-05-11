@@ -33,6 +33,15 @@ Règle nei/ra :
 - chocolat = tōtōrā
 - étoile = fetiʻa (avec ʻeta — ne jamais écrire fetia sans ʻeta)
 
+## RÈGLE ABSOLUE — GENRE EN REO TAHITI
+Le reo Tahiti n'a PAS de genre grammatical — ni masculin, ni féminin, ni neutre.
+Ne JAMAIS écrire qu'un terme est "neutre en genre" : la catégorie du genre est simplement absente de la langue.
+L'expression du SEXE BIOLOGIQUE (pas du genre) se fait ainsi :
+- Humains : tāne (mâle) / vahine (femelle) — ex: tuati ma'i tāne = infirmier, tuati ma'i vahine = infirmière
+- Animaux : oni (mâle) / ufa (femelle)
+- Plantes : 'ōtāne (mâle) / 'ōvahine (femelle)
+Dans les notes culturelles, toujours préciser qu'il s'agit d'expression du sexe, jamais du genre.
+
 ## RÈGLE ABSOLUE — ATTRIBUT ADJECTIVAL
 "Le/La + nom + est + adjectif" = TOUJOURS E mea + adjectif + te + nom.
 JAMAIS E + nom + adjectif + teie pour cette structure.
