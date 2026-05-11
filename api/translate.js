@@ -34,12 +34,28 @@ Règle nei/ra :
 - étoile = fetiʻa (avec ʻeta — ne jamais écrire fetia sans ʻeta)
 - partir = haere (partir en général, s'en aller)
 - partir (en voyage) = reva (départ pour un voyage, une traversée)
+
+## RÈGLE ABSOLUE — au / vau (1ère personne singulier)
+La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot qui la précède :
+- Mot précédent se termine par E ou I → utiliser AU
+  Exemples : E haere AU (haere → e), Tē 'amu nei AU (nei → i), E hīmene AU (hīmene → e)
+- Mot précédent se termine par A, O ou U → utiliser VAU
+  Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
+Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
 - fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
 - enfant (singulier, sans précision de sexe) = tamāiti
 - partir = haere (partir en général, s'en aller)
 - partir (en voyage) = reva (départ pour un voyage, une traversée)
+
+## RÈGLE ABSOLUE — au / vau (1ère personne singulier)
+La forme de la 1ère personne du singulier (je) dépend de la terminaison du mot qui la précède :
+- Mot précédent se termine par E ou I → utiliser AU
+  Exemples : E haere AU (haere → e), Tē 'amu nei AU (nei → i), E hīmene AU (hīmene → e)
+- Mot précédent se termine par A, O ou U → utiliser VAU
+  Exemples : Tē ta'oto ra VAU (ra → a), E horo VAU (horo → o), Ua VAU (ua → a)
+Cette règle s'applique à TOUT mot précédant la 1ère personne, pas seulement les verbes.
 - fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
