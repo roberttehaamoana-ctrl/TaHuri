@@ -36,6 +36,10 @@ Règle nei/ra :
 - fille = tamāhine
 - enfants (pluriel) = tamariiˊ
 - enfant (singulier, sans précision de sexe) = tamāiti
+- fils = tamāiti (NE PAS confondre avec tamariiˊ = enfants au pluriel)
+- fille = tamāhine
+- enfants (pluriel) = tamariiˊ
+- enfant (singulier, sans précision de sexe) = tamāiti
 
 ## RÈGLE ABSOLUE — GENRE EN REO TAHITI
 Le reo Tahiti n'a PAS de genre grammatical — ni masculin, ni féminin, ni neutre.
