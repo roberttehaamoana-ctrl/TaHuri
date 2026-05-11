@@ -1120,6 +1120,10 @@ function chargerHistorique(i) {
   const h = historique[i];
   direction = h.dir;
   document.getElementById('input-text').value = h.input;
+  // Charger le glossaire Upstash au démarrage
+  chargerGlossaireUpstash().then(() => {
+    if (document.getElementById('lex-results')) renderLexique();
+  });
   showTab('traduire');
   document.querySelector('.tab').click();
 }
@@ -1320,10 +1324,27 @@ function exporterHistorique() {
   a.click(); URL.revokeObjectURL(url);
 }
 
-// CORRECTION AUTOMATIQUE — applique le glossaire sur un terme tahitien
+// CORRECTION AUTOMATIQUE — applique le glossaire Upstash sur un terme tahitien
+let glossaireUpstash = [];
+
+async function chargerGlossaireUpstash() {
+  try {
+    const resp = await fetch('/api/glossaire');
+    if (resp.ok) {
+      glossaireUpstash = await resp.json();
+    }
+  } catch(e) {
+    glossaireUpstash = [];
+  }
+}
+
 function corrigerTah(fr, tah) {
-  const g = glossaire.find(e => e.fr.toLowerCase() === fr.toLowerCase());
-  return g ? g.tah : tah;
+  // Priorité 1 : glossaire Upstash (partagé, en ligne)
+  const gu = glossaireUpstash.find(e => e.fr.toLowerCase() === fr.toLowerCase());
+  if (gu) return gu.tah;
+  // Priorité 2 : glossaire localStorage (Expert local)
+  const gl = glossaire.find(e => e.fr.toLowerCase() === fr.toLowerCase());
+  return gl ? gl.tah : tah;
 }
 
 // CORRECTIONS
@@ -1389,14 +1410,30 @@ function renderRegles() {
 }
 
 // GLOSSAIRE
-function addGlossaire() {
+async function addGlossaire() {
   const fr = document.getElementById('g-fr').value.trim();
   const tah = document.getElementById('g-tah').value.trim();
   const note = document.getElementById('g-note').value.trim();
   if (!fr || !tah) return;
-  glossaire.push({ id: Date.now(), fr, tah, note });
+
+  // Sauvegarder en localStorage (fallback hors ligne)
+  const entree = { id: Date.now(), fr, tah, note };
+  glossaire.push(entree);
   localStorage.setItem('tahuri_glossaire', JSON.stringify(glossaire));
   ajouterHistorique('Glossaire', fr, tah, note);
+
+  // Envoyer sur Upstash (partage avec tous)
+  try {
+    await fetch('/api/glossaire', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fr, tah, note })
+    });
+    await chargerGlossaireUpstash();
+  } catch(e) {
+    console.log('Hors ligne — correction sauvegardée localement');
+  }
+
   document.getElementById('g-fr').value = '';
   document.getElementById('g-tah').value = '';
   document.getElementById('g-note').value = '';
