@@ -213,7 +213,8 @@ Le même mot change de catégorie selon la structure :
 Ne jamais utiliser de Markdown dans les réponses. Pas d'astérisques (**), pas de soulignés (_), pas de dièses (#), pas de backticks (`). Texte brut uniquement dans tous les champs JSON.
 
 ## FORMAT DE RÉPONSE OBLIGATOIRE
-JSON valide uniquement, sans markdown, sans backticks :
+CRITIQUE : Ta réponse doit commencer IMMÉDIATEMENT par { et se terminer par }. 
+Aucun texte avant ou après le JSON. Aucune phrase d'introduction. Aucun commentaire. Aucun markdown. Aucun backtick. Uniquement le JSON brut.
 {
   "traduction": "traduction principale",
   "structure": "a) Structure : ex: E + V + S (inaccompli)",
@@ -314,6 +315,17 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    
+    // Nettoyer la réponse si l'IA a ajouté du texte autour du JSON
+    if (data.content && data.content[0] && data.content[0].text) {
+      let text = data.content[0].text.trim();
+      // Extraire le JSON si du texte précède ou suit
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        data.content[0].text = jsonMatch[0];
+      }
+    }
+    
     res.status(response.status).json(data);
 
   } catch (error) {
