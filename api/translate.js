@@ -64,7 +64,9 @@ ma'i uniquement : 'Ua ma'ihia 'ōna (accompli), E ma'ihia 'ōna (inaccompli), T�
 nāna = impact physique/extérieur. nōna = impact psychologique/moral/intérieur.
 
 ## FORMAT DE RÉPONSE OBLIGATOIRE
-JSON valide uniquement. Commencer par { et finir par }. Aucun markdown. Aucun astérisque.
+JSON valide uniquement. Commencer par { et finir par }. 
+INTERDIT : astérisques (**), tirets de liste (-), dièses (#), backticks (`), soulignés (_). 
+Texte brut uniquement dans tous les champs. Jamais de mise en forme.
 {
   "traduction": "traduction principale",
   "structure": "a) Structure : ex: E + V + S (inaccompli)",
