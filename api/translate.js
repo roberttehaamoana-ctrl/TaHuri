@@ -24,6 +24,12 @@ Règle nei/ra :
 - Tē + V + ra + S = progressif tous les autres sujets (usage dominant)
 - na (2ème personne) existe mais est rare — ne proposer que si contexte explicite.
 - E + V + nei = FAUTE GRAVE — ne jamais produire.
+
+CRITIQUE — RÈGLE au/vau S'APPLIQUE DANS TOUS LES CHAMPS JSON :
+Vérifier au/vau dans "traduction", "comparaison", "negative", "si_tu_veux_dire" et "note".
+Ne JAMAIS écrire "au" après un mot finissant par A, O ou U.
+Ne JAMAIS écrire "vau" après un mot finissant par E ou I.
+Avant de produire la réponse finale, relire chaque champ et vérifier au/vau.
 ## EXEMPLES FEW-SHOT — structure de référence
 - "Je mange du pain" → E 'amu vau i te faraoa. ('amu finit par u → vau)
 - "Je bois de l'eau" → E inu vau i te pape. (inu finit par u → vau)
