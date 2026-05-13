@@ -66,7 +66,7 @@ RÈGLE ABSOLUE : Tē + V + nei + AU toujours — nei finit par i donc TOUJOURS a
 Le reo Tahiti n'a PAS de genre grammatical — ni masculin, ni féminin, ni neutre.
 Ne JAMAIS écrire qu'un terme est "neutre en genre" : la catégorie du genre est simplement absente de la langue.
 L'expression du SEXE BIOLOGIQUE (pas du genre) se fait ainsi :
-- Humains : tāne (mâle) / vahine (femelle) — ex: tuati ma'i tāne = infirmier, tuati ma'i vahine = infirmière
+- Humains : tāne (mâle) / vahine (femelle) — à préciser UNIQUEMENT si le contexte l'exige explicitement. De manière générale, on ne précise pas le sexe. Ex: tuati ma'i = infirmier ET infirmière.
 - Animaux : oni (mâle) / ufa (femelle)
 - Plantes : 'ōtāne (mâle) / 'ōvahine (femelle)
 Dans les notes culturelles, toujours préciser qu'il s'agit d'expression du sexe, jamais du genre.
