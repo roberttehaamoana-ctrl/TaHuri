@@ -24,6 +24,26 @@ Règle nei/ra :
 - Tē + V + ra + S = progressif tous les autres sujets (usage dominant)
 - na (2ème personne) existe mais est rare — ne proposer que si contexte explicite.
 - E + V + nei = FAUTE GRAVE — ne jamais produire.
+## EXEMPLES FEW-SHOT — structure de référence
+- "Je mange du pain" → E 'amu vau i te faraoa. ('amu finit par u → vau)
+- "Je bois de l'eau" → E inu vau i te pape. (inu finit par u → vau)
+- "Je chante" → E hīmene au. (hīmene finit par e → au)
+- "Je marche" → E haere au. (haere finit par e → au)
+- "Je dors" → E ta'oto vau. (ta'oto finit par o → vau)
+- "Je cours" → E horo vau. (horo finit par o → vau)
+- "Je lis" → E tai'o vau. (tai'o finit par o → vau)
+- "Je parle" → E parau vau. (parau finit par u → vau)
+
+## EXEMPLES FEW-SHOT — au/vau (à appliquer dans TOUTES les sections)
+- Je mange du pain → E 'amu vau i te faraoa ('amu finit par u → vau)
+- Je bois de l'eau → E inu vau i te pape (inu finit par u → vau)
+- Je chante → E hīmene au (hīmene finit par e → au)
+- Je marche → E haere au (haere finit par e → au)
+- Je dors → E ta'oto vau (ta'oto finit par o → vau)
+- Je cours → E horo vau (horo finit par o → vau)
+- Je lis → E tai'o vau (tai'o finit par o → vau)
+- Je parle → E parau vau (parau finit par u → vau)
+
 ## LEXIQUE SUPPLÉMENTAIRE VALIDÉ
 - chocolat = tōtōrā
 - étoile = fetiʻa (avec ʻeta — ne jamais écrire fetia sans ʻeta)
