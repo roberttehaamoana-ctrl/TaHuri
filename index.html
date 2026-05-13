@@ -1756,11 +1756,7 @@ function renderActivites() {
 function ouvrirActivite(id) {
   const a = activites.find(x => x.id === id);
   if (!a) return;
-  document.getElementById('activite-form') && (document.getElementById('activite-form').style.display = 'none');
-  document.getElementById('activites-list').style.display = 'none';
-  document.getElementById('activite-viewer').style.display = 'block';
-  document.getElementById('act-viewer-titre').textContent = a.titre;
-  document.getElementById('act-iframe').src = a.url;
+  window.open(a.url, '_blank');
 }
 
 function fermerActivite() {
