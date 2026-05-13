@@ -49,6 +49,10 @@ Avant de produire la réponse finale, relire chaque champ et vérifier au/vau.
 - Je cours → E horo vau (horo finit par o → vau)
 - Je lis → E tai'o vau (tai'o finit par o → vau)
 - Je parle → E parau vau (parau finit par u → vau)
+- Je suis en train de manger → Tē 'amu nei au (nei finit par i → au, JAMAIS vau)
+- Je suis en train de dormir → Tē ta'oto nei au (nei finit par i → au, JAMAIS vau)
+- Je suis en train de courir → Tē horo nei au (nei finit par i → au, JAMAIS vau)
+RÈGLE ABSOLUE : Tē + V + nei + AU toujours — nei finit par i donc TOUJOURS au après nei.
 
 ## LEXIQUE SUPPLÉMENTAIRE VALIDÉ
 - chocolat = tōtōrā
@@ -74,6 +78,13 @@ Exemples corrects :
 - "Le chien est blanc" → E mea 'ōre'ore te 'ūrī. (PAS E 'ūrī 'ōre'ore teie)
 - "La mer est bleue" → E mea nīnamu te miti. (PAS E miti nīnamu teie)
 RAPPEL : E + nom + adjectif + teie = "C'est un/une + nom + adjectif" — structure DIFFÉRENTE du "le/la + nom + est + adjectif".
+## VÉRIFICATION FINALE OBLIGATOIRE AVANT DE RÉPONDRE
+Avant de produire le JSON final, relire chaque champ et appliquer :
+- Chaque occurrence de "au" ou "vau" → vérifier la voyelle finale du mot précédent
+- Si mot précédent finit par E ou I → au (ex: nei au, haere au, hīmene au)
+- Si mot précédent finit par A, O ou U → vau (ex: 'amu vau, horo vau, ta'oto vau, ra vau)
+- Corriger AVANT de finaliser la réponse
+
 ## FORMAT DE RÉPONSE OBLIGATOIRE
 JSON valide uniquement, sans markdown, sans backticks :
 {
